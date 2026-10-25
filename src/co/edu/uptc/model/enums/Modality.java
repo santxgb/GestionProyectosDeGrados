@@ -2,11 +2,11 @@ package co.edu.uptc.model.enums;
 
 public enum Modality {
 
-    MONOGRAPH("Monografía"),
-    RESEARCH_PROJECT("Proyecto de Investigación"),
-    RESEARCH_GROUP_PARTICIPATION("Participación activa en Grupo de Investigación"),
-    BUSINESS_OR_SOCIAL_INTERNSHIP("Práctica con Proyección Empresarial o Social"),
-    POSTGRADUATE_SEMESTER("Primer semestre de posgrado");
+    MONOGRAFIA("Monografía"),
+    PROYECTO_DE_INVESTIGACION("Proyecto de Investigación"),
+    PARTICIPACION_EN_GRUPO_DE_INVESTIGACION("Participación activa en Grupo de Investigación"),
+    PRACTICA_EMPRESARIAL_O_SOCIAL("Práctica con Proyección Empresarial o Social"),
+    PRIMER_SEMESTRE_DE_POSGRADO("Primer semestre de posgrado");
 
     private final String displayName;
 
@@ -17,5 +17,4 @@ public enum Modality {
     public String getDisplayName() {
         return displayName;
     }
-
 }

@@ -2,10 +2,10 @@ package co.edu.uptc.model.enums;
 
 public enum Status {
 
-    PENDING("Pendiente"),
-    APPROVED("Aprobada"),
-    APPROVED_WITH_CHANGES("Aprobada con modificaciones"),
-    REJECTED("No aprobada");
+    EN_REVISION("En revisión"),
+    APROBADO("Aprobado"),
+    APROBADO_CON_MODIFICACIONES("Aprobado con modificaciones"),
+    NO_APROBADO("No aprobado");
 
     private final String displayName;
 
@@ -16,5 +16,4 @@ public enum Status {
     public String getDisplayName() {
         return displayName;
     }
-
 }

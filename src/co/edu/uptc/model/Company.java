@@ -1,6 +1,12 @@
 package co.edu.uptc.model;
 
-public class Company {
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Company implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private String name;
     private String contactName;
     private String contactEmail;
@@ -46,5 +52,22 @@ public class Company {
 
     public void setContactPhone(String contactPhone) {
         this.contactPhone = contactPhone;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Company company = (Company) o;
+        return Objects.equals(name, company.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

@@ -1,111 +1,30 @@
 package co.edu.uptc.model;
 
-import co.edu.uptc.model.enums.Modality;
-import co.edu.uptc.model.enums.Status;
+import co.edu.uptc.model.enums.DeadlineStatus;
 
+import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
-public class DegreeWork {
-    private String id;
-    private String title;
-    private Modality modality;
-    private List<Student> students;
-    private Teacher director;
-    private Teacher codirector;
-    private Company company;
-    private LocalDate filingDate;
+public class DegreeWork implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+    private static final int MIN_MONTHS = 4;
+    private static final int MAX_MONTHS = 12;
+    private static final int WARNING_MONTHS = 2;
+
     private LocalDate approvalDate;
+    private String approvalAct;
     private List<Jury> juries;
-    private String juryAssigmentAct;
-    private Status status;
-    private String statusAct;
+    private String juryAssignmentAct;
     private String observations;
-    private List<Document> documents;
 
-    public DegreeWork() {
-    }
-
-    public DegreeWork(String id, String title, Modality modality, List<Student> students, Teacher director, Teacher codirector, Company company, LocalDate filingDate, LocalDate approvalDate, List<Jury> juries, String juryAssigmentAct, Status status, String statusAct, String observations, List<Document> documents) {
-        this.id = id;
-        this.title = title;
-        this.modality = modality;
-        this.students = students;
-        this.director = director;
-        this.codirector = codirector;
-        this.company = company;
-        this.filingDate = filingDate;
+    public DegreeWork(LocalDate approvalDate, String approvalAct) {
         this.approvalDate = approvalDate;
-        this.juries = juries;
-        this.juryAssigmentAct = juryAssigmentAct;
-        this.status = status;
-        this.statusAct = statusAct;
-        this.observations = observations;
-        this.documents = documents;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Modality getModality() {
-        return modality;
-    }
-
-    public void setModality(Modality modality) {
-        this.modality = modality;
-    }
-
-    public List<Student> getStudents() {
-        return students;
-    }
-
-    public void setStudents(List<Student> students) {
-        this.students = students;
-    }
-
-    public Teacher getDirector() {
-        return director;
-    }
-
-    public void setDirector(Teacher director) {
-        this.director = director;
-    }
-
-    public Teacher getCodirector() {
-        return codirector;
-    }
-
-    public void setCodirector(Teacher codirector) {
-        this.codirector = codirector;
-    }
-
-    public Company getCompany() {
-        return company;
-    }
-
-    public void setCompany(Company company) {
-        this.company = company;
-    }
-
-    public LocalDate getFilingDate() {
-        return filingDate;
-    }
-
-    public void setFilingDate(LocalDate filingDate) {
-        this.filingDate = filingDate;
+        this.approvalAct = approvalAct;
+        this.juries = new ArrayList<>();
     }
 
     public LocalDate getApprovalDate() {
@@ -116,36 +35,28 @@ public class DegreeWork {
         this.approvalDate = approvalDate;
     }
 
+    public String getApprovalAct() {
+        return approvalAct;
+    }
+
+    public void setApprovalAct(String approvalAct) {
+        this.approvalAct = approvalAct;
+    }
+
     public List<Jury> getJuries() {
         return juries;
     }
 
-    public void setJuries(List<Jury> juries) {
-        this.juries = juries;
+    public void addJury(Jury jury) {
+        juries.add(jury);
     }
 
-    public String getJuryAssigmentAct() {
-        return juryAssigmentAct;
+    public String getJuryAssignmentAct() {
+        return juryAssignmentAct;
     }
 
-    public void setJuryAssigmentAct(String juryAssigmentAct) {
-        this.juryAssigmentAct = juryAssigmentAct;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public String getStatusAct() {
-        return statusAct;
-    }
-
-    public void setStatusAct(String statusAct) {
-        this.statusAct = statusAct;
+    public void setJuryAssignmentAct(String juryAssignmentAct) {
+        this.juryAssignmentAct = juryAssignmentAct;
     }
 
     public String getObservations() {
@@ -156,11 +67,36 @@ public class DegreeWork {
         this.observations = observations;
     }
 
-    public List<Document> getDocuments() {
-        return documents;
+    public LocalDate getEarliestSubmissionDate() {
+        return approvalDate.plusMonths(MIN_MONTHS);
     }
 
-    public void setDocuments(List<Document> documents) {
-        this.documents = documents;
+    public LocalDate getDeadline() {
+        return approvalDate.plusMonths(MAX_MONTHS);
+    }
+
+    public long getRemainingDays(LocalDate today) {
+        return ChronoUnit.DAYS.between(today, getDeadline());
+    }
+
+    public DeadlineStatus getDeadlineStatus(LocalDate today) {
+        if (today.isAfter(getDeadline())) {
+            return DeadlineStatus.VENCIDO;
+        }
+        if (today.isBefore(getEarliestSubmissionDate())) {
+            return DeadlineStatus.PLAZO_MINIMO_PENDIENTE;
+        }
+        if (!today.isBefore(getDeadline().minusMonths(WARNING_MONTHS))) {
+            return DeadlineStatus.POR_VENCER;
+        }
+        return DeadlineStatus.VENTANA_DE_PRESENTACION;
+    }
+
+    public List<LocalDate> getAlertDates() {
+        List<LocalDate> dates = new ArrayList<>();
+        dates.add(getDeadline().minusMonths(WARNING_MONTHS));
+        dates.add(getDeadline().minusMonths(1));
+        dates.add(getDeadline().minusDays(15));
+        return dates;
     }
 }

@@ -2,8 +2,8 @@ package co.edu.uptc.model.enums;
 
 public enum Stage {
 
-    PROPOSAL("Propuesta"),
-    DEGREE_WORK("Trabajo de grado");
+    PROPUESTA("Propuesta"),
+    TRABAJO_DE_GRADO("Trabajo de grado");
 
     private final String displayName;
 
