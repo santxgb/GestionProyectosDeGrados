@@ -7,7 +7,7 @@ public class Student implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private String id;
+    private String idNumber;
     private String code;
     private String lastNames;
     private String firstNames;
@@ -17,12 +17,13 @@ public class Student implements Serializable {
     public Student() {
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+    public Student(String idNumber, String code, String lastNames, String firstNames, String email, String phone) {
+        this.idNumber = idNumber;
+        this.code = code;
+        this.lastNames = lastNames;
+        this.firstNames = firstNames;
+        this.email = email;
+        this.phone = phone;
     }
 
     public String getCode() {
@@ -78,11 +79,11 @@ public class Student implements Serializable {
             return false;
         }
         Student student = (Student) o;
-        return Objects.equals(id, student.id) && Objects.equals(code, student.code);
+        return Objects.equals(idNumber, student.idNumber) && Objects.equals(code, student.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, code);
+        return Objects.hash(idNumber, code);
     }
 }
