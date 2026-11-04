@@ -4,9 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Attachment implements Serializable {
+public class Attachment{
 
-    private static final long serialVersionUID = 1L;
     private String name;
     private String type;
     private String path;

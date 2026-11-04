@@ -3,9 +3,7 @@ package co.edu.uptc.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Jury implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Jury{
 
     private String id;
     private String lastNames;

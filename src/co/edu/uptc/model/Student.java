@@ -3,9 +3,7 @@ package co.edu.uptc.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Student implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Student {
 
     private String idNumber;
     private String code;

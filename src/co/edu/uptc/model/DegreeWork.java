@@ -8,9 +8,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DegreeWork implements Serializable {
+public class DegreeWork {
 
-    private static final long serialVersionUID = 1L;
     private static final int MIN_MONTHS = 4;
     private static final int MAX_MONTHS = 12;
     private static final int WARNING_MONTHS = 2;

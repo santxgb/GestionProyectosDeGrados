@@ -11,9 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Document implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class Document {
     private static final int REVIEW_DAYS = 15;
 
     private String id;
