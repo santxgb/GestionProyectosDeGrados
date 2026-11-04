@@ -4,7 +4,6 @@ import co.edu.uptc.model.enums.Modality;
 import co.edu.uptc.model.enums.Stage;
 import co.edu.uptc.model.enums.Status;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
