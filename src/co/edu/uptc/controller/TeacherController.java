@@ -1,5 +1,10 @@
 package co.edu.uptc.controller;
 
+import co.edu.uptc.model.Teacher;
+import co.edu.uptc.service.TeacherService;
+
+import java.util.List;
+
 public class TeacherController {
 
     public TeacherController(TeacherService teacherService) {

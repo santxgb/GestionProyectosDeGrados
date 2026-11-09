@@ -1,5 +1,10 @@
 package co.edu.uptc.controller;
 
+import co.edu.uptc.model.Document;
+import co.edu.uptc.service.DocumentService;
+
+import java.util.List;
+
 public class DocumentController {
 
     public DocumentController(DocumentService documentService) {

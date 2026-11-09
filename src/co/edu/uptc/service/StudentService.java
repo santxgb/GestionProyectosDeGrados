@@ -1,15 +1,19 @@
 package co.edu.uptc.service;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import co.edu.uptc.model.Student;
 import co.edu.uptc.repository.JsonRepository;
+import com.google.gson.reflect.TypeToken;
 
 public class StudentService {
+
     public StudentService() {
-        Type type = new TypeToken<List<Student>>() {
-        }.getType();
+
+        Type type = new TypeToken<List<Student>>() {}.getType();
         repository = new JsonRepository<>("student.json", type);
+
     }
     public List<Student> listar() {
         return repository.findAll();
