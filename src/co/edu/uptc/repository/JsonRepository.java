@@ -1,12 +1,16 @@
 package co.edu.uptc.repository;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class JsonRepository<T> implements Repository<T> {
 
@@ -17,42 +21,47 @@ public class JsonRepository<T> implements Repository<T> {
     public JsonRepository(String fileName, Type type) {
         this.fileName = fileName;
         this.type = type;
-        this.gson = new Gson();
+        this.gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(LocalDate.class, new LocalDateAdapter())
+                .create();
     }
 
     @Override
     public void save(T entity) {
-
         List<T> data = findAll();
         data.add(entity);
+        saveAll(data);
+    }
 
-        try (FileWriter writer = new FileWriter(fileName)) {
+    @Override
+    public void saveAll(List<T> data) {
+        File file = new File(fileName);
+        File parent = file.getParentFile();
+        if (parent != null) {
+            parent.mkdirs();
+        }
+        try (FileWriter writer = new FileWriter(file)) {
             gson.toJson(data, writer);
-           
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            throw new IllegalStateException("Error writing " + fileName + ": " + e.getMessage(), e);
         }
     }
-        @Override
-        public void saveAll(List<T> data) {
-        try (FileWriter writer = new FileWriter(fileName)) {
-            gson.toJson(data, writer);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+
     @Override
     public List<T> findAll() {
-
-        try (FileReader reader = new FileReader(fileName)) {
-            List<T>data = gson.fromJson(reader, type);
-             if (data==null) {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            return new ArrayList<>();
+        }
+        try (FileReader reader = new FileReader(file)) {
+            List<T> data = gson.fromJson(reader, type);
+            if (data == null) {
                 return new ArrayList<>();
             }
             return data;
-        } catch (Exception e) {
-            return new ArrayList<>();
+        } catch (IOException e) {
+            throw new IllegalStateException("Error reading " + fileName + ": " + e.getMessage(), e);
         }
     }
-
 }
