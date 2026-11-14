@@ -29,4 +29,50 @@ public class TeacherService {
         }
         return null;
     }
+
+    public boolean save(Teacher teacher) {
+        if (!hasValidId(teacher)) {
+            return false;
+        }
+        if (buscarPorId(teacher.getId()) != null) {
+            return false;
+        }
+        repository.save(teacher);
+        return true;
+    }
+
+    public boolean update(Teacher teacher) {
+        if (!hasValidId(teacher)) {
+            return false;
+        }
+        List<Teacher> teachers = repository.findAll();
+        for (int i = 0; i < teachers.size(); i++) {
+            if (teacher.getId().equals(teachers.get(i).getId())) {
+                teachers.set(i, teacher);
+                repository.saveAll(teachers);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean delete(String id) {
+        if (id == null || id.trim().isEmpty()) {
+            return false;
+        }
+        List<Teacher> teachers = repository.findAll();
+        for (int i = 0; i < teachers.size(); i++) {
+            if (id.equals(teachers.get(i).getId())) {
+                teachers.remove(i);
+                repository.saveAll(teachers);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasValidId(Teacher teacher) {
+        return teacher != null && teacher.getId() != null
+                && !teacher.getId().trim().isEmpty();
+    }
 }

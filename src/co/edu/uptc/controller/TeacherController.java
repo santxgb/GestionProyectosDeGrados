@@ -20,4 +20,16 @@ public class TeacherController {
     public Teacher buscarProfesorPorId(String id) {
         return teacherService.buscarPorId(id);
     }
+
+    public boolean registrarDocente(Teacher teacher) {
+        return teacherService.save(teacher);
+    }
+
+    public boolean actualizarDocente(Teacher teacher) {
+        return teacherService.update(teacher);
+    }
+
+    public boolean eliminarDocente(String id) {
+        return teacherService.delete(id);
+    }
 }
