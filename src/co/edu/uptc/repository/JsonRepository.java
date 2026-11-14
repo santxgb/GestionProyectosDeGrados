@@ -41,10 +41,11 @@ public class JsonRepository<T> implements Repository<T> {
         if (parent != null) {
             parent.mkdirs();
         }
+
         try (FileWriter writer = new FileWriter(file)) {
             gson.toJson(data, writer);
         } catch (IOException e) {
-            throw new IllegalStateException("Error writing " + fileName + ": " + e.getMessage(), e);
+            throw new IllegalStateException("Error al guardar " + fileName + ": " + e.getMessage(), e);
         }
     }
 
@@ -54,6 +55,7 @@ public class JsonRepository<T> implements Repository<T> {
         if (!file.exists()) {
             return new ArrayList<>();
         }
+
         try (FileReader reader = new FileReader(file)) {
             List<T> data = gson.fromJson(reader, type);
             if (data == null) {
@@ -61,7 +63,7 @@ public class JsonRepository<T> implements Repository<T> {
             }
             return data;
         } catch (IOException e) {
-            throw new IllegalStateException("Error reading " + fileName + ": " + e.getMessage(), e);
+            throw new IllegalStateException("Error al leer " + fileName + ": " + e.getMessage(), e);
         }
     }
 }
