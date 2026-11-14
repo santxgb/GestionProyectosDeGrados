@@ -20,4 +20,16 @@ public class StudentController {
     public Student buscarEstudiantePorId(String id) {
         return studentService.buscarPorId(id);
     }
+
+    public boolean registrarEstudiante(Student student) {
+        return studentService.save(student);
+    }
+
+    public boolean actualizarEstudiante(Student student) {
+        return studentService.update(student);
+    }
+
+    public boolean eliminarEstudiante(String code) {
+        return studentService.delete(code);
+    }
 }

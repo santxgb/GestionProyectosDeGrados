@@ -84,11 +84,11 @@ public class Student {
             return false;
         }
         Student student = (Student) o;
-        return Objects.equals(idNumber, student.idNumber) && Objects.equals(code, student.code);
+        return Objects.equals(code, student.code);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idNumber, code);
+        return Objects.hash(code);
     }
 }

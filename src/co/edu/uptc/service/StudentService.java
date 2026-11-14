@@ -29,4 +29,50 @@ public class StudentService {
         }
         return null;
     }
+
+    public boolean save(Student student) {
+        if (!hasValidCode(student)) {
+            return false;
+        }
+        if (buscarPorId(student.getCode()) != null) {
+            return false;
+        }
+        repository.save(student);
+        return true;
+    }
+
+    public boolean update(Student student) {
+        if (!hasValidCode(student)) {
+            return false;
+        }
+        List<Student> students = repository.findAll();
+        for (int i = 0; i < students.size(); i++) {
+            if (student.getCode().equals(students.get(i).getCode())) {
+                students.set(i, student);
+                repository.saveAll(students);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean delete(String code) {
+        if (code == null || code.trim().isEmpty()) {
+            return false;
+        }
+        List<Student> students = repository.findAll();
+        for (int i = 0; i < students.size(); i++) {
+            if (code.equals(students.get(i).getCode())) {
+                students.remove(i);
+                repository.saveAll(students);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasValidCode(Student student) {
+        return student != null && student.getCode() != null
+                && !student.getCode().trim().isEmpty();
+    }
 }
