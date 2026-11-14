@@ -150,7 +150,16 @@ public class Document {
         return degreeWork;
     }
 
-    public void registerDecision(Status status, LocalDate date, String act) {
+    public boolean registerDecision(Status status, LocalDate date, String act) {
+        if (stage != Stage.PROPUESTA || this.status != Status.EN_REVISION || degreeWork != null) {
+            return false;
+        }
+        if (status == null || status == Status.EN_REVISION || date == null
+                || filingDate == null || date.isBefore(filingDate)
+                || act == null || act.trim().isEmpty()) {
+            return false;
+        }
+
         this.status = status;
         this.decisionDate = date;
         this.statusAct = act;
@@ -158,6 +167,7 @@ public class Document {
             this.stage = Stage.TRABAJO_DE_GRADO;
             this.degreeWork = new DegreeWork(date, act);
         }
+        return true;
     }
 
     public LocalDate getReviewDueDate() {
