@@ -1,56 +1,32 @@
 package co.edu.uptc.service;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 import co.edu.uptc.model.Teacher;
+import co.edu.uptc.repository.JsonRepository;
 import co.edu.uptc.repository.Repository;
+import com.google.gson.reflect.TypeToken;
 
 public class TeacherService {
 
     private final Repository<Teacher> repository;
 
-    public TeacherService(Repository<Teacher> repository) {
-        this.repository = repository;
+    public TeacherService() {
+        Type type = new TypeToken<List<Teacher>>() {}.getType();
+        repository = new JsonRepository<>("teacher.json", type);
     }
 
-    public List<Teacher> findAll() {
+    public List<Teacher> listar() {
         return repository.findAll();
     }
 
-    public Teacher findById(String id) {
-        return repository.findAll()
-                .stream()
-                .filter(t -> t.getId().equals(id))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public boolean create(Teacher teacher) {
-        if (findById(teacher.getId()) != null) {
-            return false;
-        }
-        repository.save(teacher);
-        return true;
-    }
-
-    public boolean update(Teacher teacher) {
-        List<Teacher> teachers = repository.findAll();
-        for (int i = 0; i < teachers.size(); i++) {
-            if (teachers.get(i).getId().equals(teacher.getId())) {
-                teachers.set(i, teacher);
-                repository.saveAll(teachers);
-                return true;
+    public Teacher buscarPorId(String id) {
+        for (Teacher teacher : repository.findAll()) {
+            if (id != null && id.equals(teacher.getId())) {
+                return teacher;
             }
         }
-        return false;
-    }
-
-    public boolean delete(String id) {
-        List<Teacher> teachers = repository.findAll();
-        boolean removed = teachers.removeIf(t -> t.getId().equals(id));
-        if (removed) {
-            repository.saveAll(teachers);
-        }
-        return removed;
+        return null;
     }
 }

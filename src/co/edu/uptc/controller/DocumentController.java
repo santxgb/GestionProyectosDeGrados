@@ -7,17 +7,17 @@ import java.util.List;
 
 public class DocumentController {
 
+    private final DocumentService documentService;
+
     public DocumentController(DocumentService documentService) {
         this.documentService = documentService;
     }
+
     public List<Document> listarDocumentos() {
         return documentService.listar();
     }
+
     public Document buscarDocumentoPorId(String id) {
-        Document document = documentService.buscarPorId(id);
-        if (document == null) {
-            return null; 
-        }
-        return document;
+        return documentService.buscarPorId(id);
     }
 }
