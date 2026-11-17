@@ -1,9 +1,10 @@
 package co.edu.uptc.controller;
 
+import co.edu.uptc.model.Attachment;
 import co.edu.uptc.model.Document;
+import co.edu.uptc.model.Jury;
 import co.edu.uptc.model.enums.Status;
 import co.edu.uptc.service.DocumentService;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,19 +24,31 @@ public class DocumentController {
         return documentService.buscarPorId(id);
     }
 
-    public boolean registrarDocumento(Document document) {
-        return documentService.save(document);
+    public void registrarDocumento(Document document) {
+        documentService.save(document);
     }
 
-    public boolean actualizarDocumento(Document document) {
-        return documentService.update(document);
+    public void actualizarDocumento(Document document) {
+        documentService.update(document);
     }
 
-    public boolean eliminarDocumento(String id) {
-        return documentService.delete(id);
+    public void eliminarDocumento(String id) {
+        documentService.delete(id);
     }
 
-    public boolean registrarDecisionDocumento(String id, Status status, LocalDate date, String act) {
-        return documentService.registerDecision(id, status, date, act);
+    public void registrarDecisionDocumento(String id, Status status, LocalDate date, String act) {
+        documentService.registerDecision(id, status, date, act);
+    }
+
+    public void asignarJurados(String id, String act, List<Jury> juries) {
+        documentService.assignJuries(id, act, juries);
+    }
+
+    public void actualizarObservaciones(String id, String observations) {
+        documentService.updateObservations(id, observations);
+    }
+
+    public void agregarAnexo(String id, Attachment attachment) {
+        documentService.addAttachment(id, attachment);
     }
 }

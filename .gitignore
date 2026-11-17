@@ -28,3 +28,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Datos del sistema (información de estudiantes y docentes) ###
+data/

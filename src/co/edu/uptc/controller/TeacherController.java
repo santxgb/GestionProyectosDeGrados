@@ -2,7 +2,6 @@ package co.edu.uptc.controller;
 
 import co.edu.uptc.model.Teacher;
 import co.edu.uptc.service.TeacherService;
-
 import java.util.List;
 
 public class TeacherController {
@@ -21,15 +20,15 @@ public class TeacherController {
         return teacherService.buscarPorId(id);
     }
 
-    public boolean registrarDocente(Teacher teacher) {
-        return teacherService.save(teacher);
+    public void registrarDocente(Teacher teacher) {
+        teacherService.save(teacher);
     }
 
-    public boolean actualizarDocente(Teacher teacher) {
-        return teacherService.update(teacher);
+    public void actualizarDocente(Teacher teacher) {
+        teacherService.update(teacher);
     }
 
-    public boolean eliminarDocente(String id) {
-        return teacherService.delete(id);
+    public void eliminarDocente(String id) {
+        teacherService.delete(id);
     }
 }

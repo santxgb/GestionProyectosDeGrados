@@ -1,5 +1,6 @@
 package co.edu.uptc.model;
 
+import co.edu.uptc.exception.BusinessException;
 import co.edu.uptc.model.enums.Modality;
 import co.edu.uptc.model.enums.Stage;
 import co.edu.uptc.model.enums.Status;
@@ -12,6 +13,7 @@ import java.util.Objects;
 
 public class Document {
     private static final int REVIEW_DAYS = 15;
+    public static final int MAX_AUTHORS = 2;
 
     private String id;
     private String title;
@@ -150,24 +152,31 @@ public class Document {
         return degreeWork;
     }
 
-    public boolean registerDecision(Status status, LocalDate date, String act) {
+    public void registerDecision(Status status, LocalDate date, String act) {
         if (stage != Stage.PROPUESTA || this.status != Status.EN_REVISION || degreeWork != null) {
-            return false;
+            throw new BusinessException("La propuesta ya tiene una decisión registrada.");
         }
-        if (status == null || status == Status.EN_REVISION || date == null
-                || filingDate == null || date.isBefore(filingDate)
-                || act == null || act.trim().isEmpty()) {
-            return false;
+        if (status == null || status == Status.EN_REVISION) {
+            throw new BusinessException("Debe indicar una decisión distinta de «en revisión».");
         }
-
+        if (date == null) {
+            throw new BusinessException("La fecha de la decisión es obligatoria.");
+        }
+        if (filingDate == null || date.isBefore(filingDate)) {
+            throw new BusinessException("La fecha de la decisión no puede ser anterior a la fecha de radicación.");
+        }
+        if (act == null || act.trim().isEmpty()) {
+            throw new BusinessException("El acta de la decisión es obligatoria.");
+        }
         this.status = status;
         this.decisionDate = date;
         this.statusAct = act;
         if (status == Status.APROBADO || status == Status.APROBADO_CON_MODIFICACIONES) {
             this.stage = Stage.TRABAJO_DE_GRADO;
+            // La fecha de la decisión es la fecha de aprobación del Comité de Currículo:
+            // desde ella se cuentan el plazo mínimo (4 meses) y el máximo (12 meses).
             this.degreeWork = new DegreeWork(date, act);
         }
-        return true;
     }
 
     public LocalDate getReviewDueDate() {
