@@ -12,8 +12,12 @@ import co.edu.uptc.model.Document;
 import co.edu.uptc.model.enums.AlertType;
 import co.edu.uptc.model.enums.DeadlineStatus;
 import co.edu.uptc.model.enums.Stage;
+import co.edu.uptc.model.enums.Status;
 
 public class DeadlineService {
+
+    // Margen provisional del equipo; los 15 días de revisión sí son la regla confirmada.
+    private static final int PROPOSAL_WARNING_DAYS = 3;
 
     private final DocumentService documentService;
 
@@ -60,6 +64,31 @@ public class DeadlineService {
                         ? "«" + document.getTitle() + "» vence hoy."
                         : "«" + document.getTitle() + "» vence en " + days + " día(s).";
                 alerts.add(new Alert(type, message, document.getId(), entry.getDeadline()));
+            }
+        }
+        // Propuestas pendientes: el Comité cuenta con 15 días desde la radicación.
+        // No se generan avisos para propuestas con decisión registrada.
+        for (Document document : documentService.listar()) {
+            if (document == null || document.getStage() != Stage.PROPUESTA
+                    || document.getStatus() != Status.EN_REVISION
+                    || document.getDecisionDate() != null
+                    || document.getFilingDate() == null) {
+                continue;
+            }
+
+            long remaining = document.getReviewRemainingDays(today);
+            if (remaining < 0) {
+                alerts.add(new Alert(AlertType.PROPUESTA_DECISION_VENCIDA,
+                        "La decisión de la propuesta «" + document.getTitle()
+                                + "» lleva " + Math.abs(remaining) + " día(s) vencida.",
+                        document.getId(), document.getReviewDueDate()));
+            } else if (remaining <= PROPOSAL_WARNING_DAYS) {
+                String message = remaining == 0
+                        ? "La decisión de la propuesta «" + document.getTitle() + "» vence hoy."
+                        : "La decisión de la propuesta «" + document.getTitle()
+                        + "» vence en " + remaining + " día(s).";
+                alerts.add(new Alert(AlertType.PROPUESTA_DECISION_PROXIMA,
+                        message, document.getId(), document.getReviewDueDate()));
             }
         }
         return alerts;

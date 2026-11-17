@@ -2,8 +2,6 @@ package co.edu.uptc.service;
 
 import java.lang.reflect.Type;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -120,13 +118,10 @@ public class DocumentService {
         if (act == null || act.trim().isEmpty()) {
             throw new BusinessException("El acta de envío al jurado es obligatoria.");
         }
-        validateJuries(juries);
-        List<Jury> copy = new ArrayList<>(juries);
         modifyDegreeWork(id, document -> {
             DegreeWork work = document.getDegreeWork();
+            work.replaceJuries(juries);
             work.setJuryAssignmentAct(act.trim());
-            work.getJuries().clear();
-            work.getJuries().addAll(copy);
         });
     }
 
@@ -185,20 +180,6 @@ public class DocumentService {
     private boolean isDegreeWork(Document document) {
         return document != null && document.getStage() == Stage.TRABAJO_DE_GRADO
                 && document.getDegreeWork() != null;
-    }
-
-    private void validateJuries(List<Jury> juries) {
-        if (juries == null || juries.isEmpty()) {
-            throw new BusinessException("Debe indicar al menos un jurado.");
-        }
-        for (Jury jury : juries) {
-            if (jury == null || jury.getId() == null || jury.getId().trim().isEmpty()) {
-                throw new BusinessException("Todos los jurados deben tener id.");
-            }
-        }
-        if (new HashSet<>(juries).size() != juries.size()) {
-            throw new BusinessException("Hay jurados repetidos en la lista.");
-        }
     }
 
     private void validateDocument(Document document) {
