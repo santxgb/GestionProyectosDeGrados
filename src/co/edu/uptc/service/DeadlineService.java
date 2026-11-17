@@ -48,9 +48,18 @@ public class DeadlineService {
                         "«" + document.getTitle() + "» venció hace " + Math.abs(days) + " día(s).",
                         document.getId(), entry.getDeadline()));
             } else if (entry.getStatus() == DeadlineStatus.POR_VENCER) {
-                alerts.add(new Alert(AlertType.TRABAJO_POR_VENCER,
-                        "«" + document.getTitle() + "» vence en " + days + " día(s).",
-                        document.getId(), entry.getDeadline()));
+                AlertType type;
+                if (!today.isBefore(entry.getDeadline().minusDays(15))) {
+                    type = AlertType.TRABAJO_VENCE_15_DIAS;
+                } else if (!today.isBefore(entry.getDeadline().minusMonths(1))) {
+                    type = AlertType.TRABAJO_VENCE_1_MES;
+                } else {
+                    type = AlertType.TRABAJO_VENCE_2_MESES;
+                }
+                String message = days == 0
+                        ? "«" + document.getTitle() + "» vence hoy."
+                        : "«" + document.getTitle() + "» vence en " + days + " día(s).";
+                alerts.add(new Alert(type, message, document.getId(), entry.getDeadline()));
             }
         }
         return alerts;

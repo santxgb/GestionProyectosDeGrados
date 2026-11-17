@@ -11,8 +11,7 @@ public class DegreeWork {
 
     private static final int MIN_MONTHS = 4;
     private static final int MAX_MONTHS = 12;
-    public static final List<Integer> ALERT_DAYS = List.of(30);
-    private static final int WARNING_DAYS = ALERT_DAYS.get(0);
+    private static final int WARNING_MONTHS = 2;
 
     // Fecha de aprobación del Comité de Currículo (inicio del conteo de plazos).
     private LocalDate approvalDate;
@@ -86,7 +85,7 @@ public class DegreeWork {
         if (today.isBefore(getEarliestSubmissionDate())) {
             return DeadlineStatus.PLAZO_MINIMO_PENDIENTE;
         }
-        if (!today.isBefore(getDeadline().minusDays(WARNING_DAYS))) {
+        if (!today.isBefore(getDeadline().minusMonths(WARNING_MONTHS))) {
             return DeadlineStatus.POR_VENCER;
         }
         return DeadlineStatus.VENTANA_DE_PRESENTACION;
@@ -94,9 +93,9 @@ public class DegreeWork {
 
     public List<LocalDate> getAlertDates() {
         List<LocalDate> dates = new ArrayList<>();
-        for (int days : ALERT_DAYS) {
-            dates.add(getDeadline().minusDays(days));
-        }
+        dates.add(getDeadline().minusMonths(2));
+        dates.add(getDeadline().minusMonths(1));
+        dates.add(getDeadline().minusDays(15));
         return dates;
     }
 }
