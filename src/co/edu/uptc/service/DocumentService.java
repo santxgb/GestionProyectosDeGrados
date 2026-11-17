@@ -3,13 +3,16 @@ package co.edu.uptc.service;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.function.Consumer;
+import java.util.ArrayList;
 
 import co.edu.uptc.exception.BusinessException;
+import co.edu.uptc.model.Alert;
 import co.edu.uptc.model.Attachment;
 import co.edu.uptc.model.DegreeWork;
 import co.edu.uptc.model.Document;
 import co.edu.uptc.model.Jury;
+import co.edu.uptc.model.enums.AlertType;
+import co.edu.uptc.model.enums.DeadlineStatus;
 import co.edu.uptc.model.enums.Modality;
 import co.edu.uptc.model.enums.Stage;
 import co.edu.uptc.model.enums.Status;
@@ -19,6 +22,8 @@ import co.edu.uptc.repository.Repository;
 import com.google.gson.reflect.TypeToken;
 
 public class DocumentService {
+
+    private static final int PROPOSAL_WARNING_DAYS = 3;
 
     private final Repository<Document> repository;
     private final StudentService studentService;
@@ -112,24 +117,119 @@ public class DocumentService {
         repository.saveAll(documents);
     }
 
+    // ---------- Consultas de vencimiento y alertas ----------
+
+    public List<Document> getDeadlineBoard(LocalDate today) {
+        validateReferenceDate(today);
+        return orderDegreeWorks(repository.findAll(), today);
+    }
+
+    public List<Alert> getAlerts(LocalDate today) {
+        validateReferenceDate(today);
+        List<Document> documents = repository.findAll();
+        List<Alert> alerts = new ArrayList<>();
+
+        for (Document document : orderDegreeWorks(documents, today)) {
+            DegreeWork work = document.getDegreeWork();
+            long remaining = work.getRemainingDays(today);
+            LocalDate deadline = work.getDeadline();
+            DeadlineStatus status = work.getDeadlineStatus(today);
+
+            if (status == DeadlineStatus.VENCIDO) {
+                alerts.add(new Alert(AlertType.TRABAJO_VENCIDO,
+                        "«" + document.getTitle() + "» venció hace " + Math.abs(remaining) + " día(s).",
+                        document.getId(), deadline));
+            } else if (status == DeadlineStatus.POR_VENCER) {
+                AlertType type;
+                if (!today.isBefore(deadline.minusDays(15))) {
+                    type = AlertType.TRABAJO_VENCE_15_DIAS;
+                } else if (!today.isBefore(deadline.minusMonths(1))) {
+                    type = AlertType.TRABAJO_VENCE_1_MES;
+                } else {
+                    type = AlertType.TRABAJO_VENCE_2_MESES;
+                }
+                String message = remaining == 0
+                        ? "«" + document.getTitle() + "» vence hoy."
+                        : "«" + document.getTitle() + "» vence en " + remaining + " día(s).";
+                alerts.add(new Alert(type, message, document.getId(), deadline));
+            }
+        }
+
+        // El Comité tiene 15 días desde la radicación para decidir una propuesta.
+        for (Document document : documents) {
+            if (document == null || document.getStage() != Stage.PROPUESTA
+                    || document.getStatus() != Status.EN_REVISION
+                    || document.getDecisionDate() != null
+                    || document.getFilingDate() == null) {
+                continue;
+            }
+            long remaining = document.getReviewRemainingDays(today);
+            if (remaining < 0) {
+                alerts.add(new Alert(AlertType.PROPUESTA_DECISION_VENCIDA,
+                        "La decisión de la propuesta «" + document.getTitle()
+                                + "» lleva " + Math.abs(remaining) + " día(s) vencida.",
+                        document.getId(), document.getReviewDueDate()));
+            } else if (remaining <= PROPOSAL_WARNING_DAYS) {
+                String message = remaining == 0
+                        ? "La decisión de la propuesta «" + document.getTitle() + "» vence hoy."
+                        : "La decisión de la propuesta «" + document.getTitle()
+                        + "» vence en " + remaining + " día(s).";
+                alerts.add(new Alert(AlertType.PROPUESTA_DECISION_PROXIMA,
+                        message, document.getId(), document.getReviewDueDate()));
+            }
+        }
+        return alerts;
+    }
+
+    private List<Document> orderDegreeWorks(List<Document> documents, LocalDate today) {
+        List<Document> board = new ArrayList<>();
+        for (Document document : documents) {
+            if (document != null && document.getStage() == Stage.TRABAJO_DE_GRADO
+                    && document.getDegreeWork() != null
+                    && document.getDegreeWork().getApprovalDate() != null) {
+                board.add(document);
+            }
+        }
+        for (int i = 0; i < board.size(); i++) {
+            for (int j = i + 1; j < board.size(); j++) {
+                long first = board.get(i).getDegreeWork().getRemainingDays(today);
+                long second = board.get(j).getDegreeWork().getRemainingDays(today);
+                if (second < first) {
+                    Document current = board.get(i);
+                    board.set(i, board.get(j));
+                    board.set(j, current);
+                }
+            }
+        }
+        return board;
+    }
+
+    private void validateReferenceDate(LocalDate today) {
+        if (today == null) {
+            throw new BusinessException("Debe indicar la fecha de consulta.");
+        }
+    }
+
     // ---------- Seguimiento del trabajo de grado (después de la aprobación) ----------
 
     public void assignJuries(String id, String act, List<Jury> juries) {
         if (act == null || act.trim().isEmpty()) {
             throw new BusinessException("El acta de envío al jurado es obligatoria.");
         }
-        modifyDegreeWork(id, document -> {
-            DegreeWork work = document.getDegreeWork();
-            work.replaceJuries(juries);
-            work.setJuryAssignmentAct(act.trim());
-        });
+        List<Document> documents = repository.findAll();
+        Document document = requireDegreeWork(documents, id);
+        DegreeWork work = document.getDegreeWork();
+        work.replaceJuries(juries);
+        work.setJuryAssignmentAct(act.trim());
+        repository.saveAll(documents);
     }
 
     public void updateObservations(String id, String observations) {
-        modifyDegreeWork(id, document -> {
-            String text = observations == null ? null : observations.trim();
-            document.getDegreeWork().setObservations(text);
-        });
+        List<Document> documents = repository.findAll();
+        Document document = requireDegreeWork(documents, id);
+        String text = observations == null ? null : observations.trim();
+        document.getDegreeWork().setObservations(text);
+        repository.saveAll(documents);
     }
 
     public void addAttachment(String id, Attachment attachment) {
@@ -137,22 +237,21 @@ public class DocumentService {
                 || attachment.getPath().trim().isEmpty()) {
             throw new BusinessException("El documento adjunto debe tener una ruta.");
         }
-        modifyDegreeWork(id, document -> {
-            if (document.getAttachments().contains(attachment)) {
-                throw new BusinessException("Ya existe un adjunto con la ruta " + attachment.getPath() + ".");
-            }
-            document.addAttachment(attachment);
-        });
+        List<Document> documents = repository.findAll();
+        Document document = requireDegreeWork(documents, id);
+        if (document.getAttachments().contains(attachment)) {
+            throw new BusinessException("Ya existe un adjunto con la ruta " + attachment.getPath() + ".");
+        }
+        document.addAttachment(attachment);
+        repository.saveAll(documents);
     }
 
-    private void modifyDegreeWork(String id, Consumer<Document> change) {
-        List<Document> documents = repository.findAll();
+    private Document requireDegreeWork(List<Document> documents, String id) {
         Document document = requireDocument(documents, id);
         if (!isDegreeWork(document)) {
             throw new BusinessException("El documento " + id + " aún no es un trabajo de grado aprobado.");
         }
-        change.accept(document);
-        repository.saveAll(documents);
+        return document;
     }
 
     // ---------- Utilidades ----------

@@ -1,5 +1,6 @@
 package co.edu.uptc.controller;
 
+import co.edu.uptc.model.Alert;
 import co.edu.uptc.model.Attachment;
 import co.edu.uptc.model.Document;
 import co.edu.uptc.model.Jury;
@@ -22,6 +23,14 @@ public class DocumentController {
 
     public Document buscarDocumentoPorId(String id) {
         return documentService.buscarPorId(id);
+    }
+
+    public List<Document> obtenerTablero() {
+        return documentService.getDeadlineBoard(LocalDate.now());
+    }
+
+    public List<Alert> obtenerAlertas() {
+        return documentService.getAlerts(LocalDate.now());
     }
 
     public void registrarDocumento(Document document) {
