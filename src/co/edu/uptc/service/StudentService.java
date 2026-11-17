@@ -34,6 +34,7 @@ public class StudentService {
     }
 
     public Student buscarPorCodigo(String code) {
+        validateCode(code);
         for (Student student : repository.findAll()) {
             if (code != null && code.equals(student.getCode())) {
                 return student;
@@ -43,7 +44,7 @@ public class StudentService {
     }
 
     public void save(Student student) {
-        validateCode(student);
+        validateStudent(student);
         if (buscarPorCodigo(student.getCode()) != null) {
             throw new BusinessException("Ya existe un estudiante con el código " + student.getCode() + ".");
         }
@@ -51,7 +52,7 @@ public class StudentService {
     }
 
     public void update(Student student) {
-        validateCode(student);
+        validateStudent(student);
         List<Student> students = repository.findAll();
         for (int i = 0; i < students.size(); i++) {
             if (student.getCode().equals(students.get(i).getCode())) {
@@ -64,9 +65,7 @@ public class StudentService {
     }
 
     public void delete(String code) {
-        if (code == null || code.trim().isEmpty()) {
-            throw new BusinessException("Debe indicar el código del estudiante.");
-        }
+        validateCode(code);
         List<Student> students = repository.findAll();
         for (int i = 0; i < students.size(); i++) {
             if (code.equals(students.get(i).getCode())) {
@@ -83,12 +82,22 @@ public class StudentService {
         throw new BusinessException("No existe un estudiante con el código " + code + ".");
     }
 
-    private void validateCode(Student student) {
+    private void validateStudent(Student student) {
         if (student == null) {
-            throw new BusinessException("El estudiante no puede ser nulo.");
+            throw new BusinessException("Debe proporcionar los datos del estudiante.");
         }
-        if (student.getCode() == null || student.getCode().trim().isEmpty()) {
-            throw new BusinessException("El código del estudiante es obligatorio.");
+        validateCode(student.getCode());
+        if (student.getFirstNames() == null || student.getFirstNames().trim().isEmpty()) {
+            throw new BusinessException("Los nombres del estudiante son obligatorios.");
+        }
+        if (student.getLastNames() == null || student.getLastNames().trim().isEmpty()) {
+            throw new BusinessException("Los apellidos del estudiante son obligatorios.");
+        }
+    }
+
+    private void validateCode(String code) {
+        if (code == null || code.trim().isEmpty()) {
+            throw new BusinessException("Debe indicar el código del estudiante.");
         }
     }
 

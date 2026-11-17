@@ -34,6 +34,7 @@ public class TeacherService {
     }
 
     public Teacher buscarPorId(String id) {
+        validateId(id);
         for (Teacher teacher : repository.findAll()) {
             if (id != null && id.equals(teacher.getId())) {
                 return teacher;
@@ -43,7 +44,7 @@ public class TeacherService {
     }
 
     public void save(Teacher teacher) {
-        validateId(teacher);
+        validateTeacher(teacher);
         if (buscarPorId(teacher.getId()) != null) {
             throw new BusinessException("Ya existe un docente con el id " + teacher.getId() + ".");
         }
@@ -51,7 +52,7 @@ public class TeacherService {
     }
 
     public void update(Teacher teacher) {
-        validateId(teacher);
+        validateTeacher(teacher);
         List<Teacher> teachers = repository.findAll();
         for (int i = 0; i < teachers.size(); i++) {
             if (teacher.getId().equals(teachers.get(i).getId())) {
@@ -64,9 +65,7 @@ public class TeacherService {
     }
 
     public void delete(String id) {
-        if (id == null || id.trim().isEmpty()) {
-            throw new BusinessException("Debe indicar el id del docente.");
-        }
+        validateId(id);
         List<Teacher> teachers = repository.findAll();
         for (int i = 0; i < teachers.size(); i++) {
             if (id.equals(teachers.get(i).getId())) {
@@ -84,12 +83,22 @@ public class TeacherService {
         throw new BusinessException("No existe un docente con el id " + id + ".");
     }
 
-    private void validateId(Teacher teacher) {
+    private void validateTeacher(Teacher teacher) {
         if (teacher == null) {
-            throw new BusinessException("El docente no puede ser nulo.");
+            throw new BusinessException("Debe proporcionar los datos del docente.");
         }
-        if (teacher.getId() == null || teacher.getId().trim().isEmpty()) {
-            throw new BusinessException("El id del docente es obligatorio.");
+        validateId(teacher.getId());
+        if (teacher.getFirstNames() == null || teacher.getFirstNames().trim().isEmpty()) {
+            throw new BusinessException("Los nombres del docente son obligatorios.");
+        }
+        if (teacher.getLastNames() == null || teacher.getLastNames().trim().isEmpty()) {
+            throw new BusinessException("Los apellidos del docente son obligatorios.");
+        }
+    }
+
+    private void validateId(String id) {
+        if (id == null || id.trim().isEmpty()) {
+            throw new BusinessException("Debe indicar el identificador del docente.");
         }
     }
 

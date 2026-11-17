@@ -48,6 +48,7 @@ public class DocumentService {
     }
 
     public Document buscarPorId(String id) {
+        validateDocumentId(id);
         for (Document document : repository.findAll()) {
             if (id != null && id.equals(document.getId())) {
                 return document;
@@ -91,9 +92,7 @@ public class DocumentService {
     }
 
     public void delete(String id) {
-        if (id == null || id.trim().isEmpty()) {
-            throw new BusinessException("Debe indicar el id del documento.");
-        }
+        validateDocumentId(id);
         List<Document> documents = repository.findAll();
         for (int i = 0; i < documents.size(); i++) {
             Document document = documents.get(i);
@@ -257,15 +256,19 @@ public class DocumentService {
     // ---------- Utilidades ----------
 
     private Document requireDocument(List<Document> documents, String id) {
-        if (id == null || id.trim().isEmpty()) {
-            throw new BusinessException("Debe indicar el id del documento.");
-        }
+        validateDocumentId(id);
         for (Document document : documents) {
             if (id.equals(document.getId())) {
                 return document;
             }
         }
         throw new BusinessException("No existe un documento con el id " + id + ".");
+    }
+
+    private void validateDocumentId(String id) {
+        if (id == null || id.trim().isEmpty()) {
+            throw new BusinessException("Debe indicar el identificador del expediente.");
+        }
     }
 
     private boolean isDraft(Document document) {
@@ -285,9 +288,7 @@ public class DocumentService {
         if (document == null) {
             throw new BusinessException("El documento no puede ser nulo.");
         }
-        if (document.getId() == null || document.getId().trim().isEmpty()) {
-            throw new BusinessException("El id del documento es obligatorio.");
-        }
+        validateDocumentId(document.getId());
         if (document.getTitle() == null || document.getTitle().trim().isEmpty()) {
             throw new BusinessException("El título es obligatorio.");
         }
