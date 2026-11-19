@@ -5,15 +5,20 @@ import co.edu.uptc.controller.StudentController;
 import co.edu.uptc.controller.TeacherController;
 import co.edu.uptc.exception.BusinessException;
 import co.edu.uptc.model.Alert;
+import co.edu.uptc.model.Document;
+import co.edu.uptc.model.DegreeWork;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.time.LocalDate;
 import java.util.List;
 
 public class MainView extends JFrame {
@@ -29,7 +34,7 @@ public class MainView extends JFrame {
         this.teacherController = teacherController;
 
         setTitle("SisTG UPTC");
-        setSize(520, 390);
+        setSize(520, 440);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
@@ -39,16 +44,18 @@ public class MainView extends JFrame {
                 SwingConstants.CENTER);
         add(title, BorderLayout.NORTH);
 
-        JPanel buttons = new JPanel(new GridLayout(5, 1, 10, 10));
+        JPanel buttons = new JPanel(new GridLayout(6, 1, 10, 10));
         JButton studentsButton = new JButton("Gestionar estudiantes");
         JButton teachersButton = new JButton("Gestionar docentes");
         JButton documentsButton = new JButton("Radicar y consultar propuestas");
+        JButton boardButton = new JButton("Ver tablero de vencimientos");
         JButton alertsButton = new JButton("Consultar alertas");
         JButton exitButton = new JButton("Salir");
 
         buttons.add(studentsButton);
         buttons.add(teachersButton);
         buttons.add(documentsButton);
+        buttons.add(boardButton);
         buttons.add(alertsButton);
         buttons.add(exitButton);
         add(buttons, BorderLayout.CENTER);
@@ -56,6 +63,7 @@ public class MainView extends JFrame {
         studentsButton.addActionListener(e -> openStudents());
         teachersButton.addActionListener(e -> openTeachers());
         documentsButton.addActionListener(e -> openDocuments());
+        boardButton.addActionListener(e -> showDeadlineBoard());
         alertsButton.addActionListener(e -> showAlerts());
         exitButton.addActionListener(e -> dispose());
     }
@@ -73,6 +81,49 @@ public class MainView extends JFrame {
     private void openDocuments() {
         DocumentView documentView = new DocumentView(documentController);
         documentView.setVisible(true);
+    }
+
+    private void showDeadlineBoard() {
+        try {
+            List<Document> board = documentController.obtenerTablero();
+            if (board.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "No hay trabajos de grado aprobados para mostrar.");
+                return;
+            }
+
+            LocalDate today = LocalDate.now();
+            StringBuilder message = new StringBuilder();
+            message.append("Fecha de consulta: ").append(today).append("\n");
+            message.append("Los días negativos indican que el trabajo ya venció.\n\n");
+
+            for (Document document : board) {
+                DegreeWork work = document.getDegreeWork();
+                message.append("Expediente: ").append(document.getId()).append("\n");
+                message.append("Título: ").append(document.getTitle()).append("\n");
+                message.append("Aprobación: ").append(work.getApprovalDate()).append("\n");
+                message.append("Presentación desde: ")
+                        .append(work.getEarliestSubmissionDate()).append("\n");
+                message.append("Fecha máxima: ").append(work.getDeadline()).append("\n");
+                message.append("Días hasta el vencimiento: ")
+                        .append(work.getRemainingDays(today)).append("\n");
+                message.append("Estado del plazo: ")
+                        .append(work.getDeadlineStatus(today).getDisplayName())
+                        .append("\n\n");
+            }
+
+            JTextArea report = new JTextArea(message.toString(), 18, 48);
+            report.setEditable(false);
+            report.setLineWrap(true);
+            report.setWrapStyleWord(true);
+            report.setCaretPosition(0);
+
+            JOptionPane.showMessageDialog(this, new JScrollPane(report),
+                    "Tablero de vencimientos", JOptionPane.INFORMATION_MESSAGE);
+        } catch (BusinessException | IllegalStateException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(),
+                    "No se pudo consultar el tablero", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void showAlerts() {
