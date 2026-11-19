@@ -20,6 +20,11 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.time.LocalDate;
 import java.util.List;
+import javax.swing.JFileChooser;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class MainView extends JFrame {
 
@@ -44,12 +49,13 @@ public class MainView extends JFrame {
                 SwingConstants.CENTER);
         add(title, BorderLayout.NORTH);
 
-        JPanel buttons = new JPanel(new GridLayout(6, 1, 10, 10));
+        JPanel buttons = new JPanel(new GridLayout(7, 1, 10, 10));
         JButton studentsButton = new JButton("Gestionar estudiantes");
         JButton teachersButton = new JButton("Gestionar docentes");
         JButton documentsButton = new JButton("Radicar y consultar propuestas");
         JButton boardButton = new JButton("Ver tablero de vencimientos");
         JButton alertsButton = new JButton("Consultar alertas");
+        JButton exportAlertsButton = new JButton("Exportar alertas a TXT");
         JButton exitButton = new JButton("Salir");
 
         buttons.add(studentsButton);
@@ -57,6 +63,7 @@ public class MainView extends JFrame {
         buttons.add(documentsButton);
         buttons.add(boardButton);
         buttons.add(alertsButton);
+        buttons.add(exportAlertsButton);
         buttons.add(exitButton);
         add(buttons, BorderLayout.CENTER);
 
@@ -64,8 +71,11 @@ public class MainView extends JFrame {
         teachersButton.addActionListener(e -> openTeachers());
         documentsButton.addActionListener(e -> openDocuments());
         boardButton.addActionListener(e -> showDeadlineBoard());
-        alertsButton.addActionListener(e -> showAlerts());
+        alertsButton.addActionListener(e -> showAlerts(true));
+        exportAlertsButton.addActionListener(e -> exportAlertsToTxt());
         exitButton.addActionListener(e -> dispose());
+
+        showAlerts(false);
     }
 
     private void openStudents() {
@@ -126,25 +136,93 @@ public class MainView extends JFrame {
         }
     }
 
-    private void showAlerts() {
+   private void showAlerts(boolean showWhenEmpty) {
         try {
             List<Alert> alerts = documentController.obtenerAlertas();
 
             if (alerts.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "No hay alertas pendientes.");
+                if (showWhenEmpty) {
+                    JOptionPane.showMessageDialog(this, "No hay alertas pendientes.");
+                }
                 return;
             }
 
             StringBuilder message = new StringBuilder();
             for (Alert alert : alerts) {
-                message.append(alert.getMessage()).append("\n\n");
+                message.append("[").append(alert.getType()).append("] ")
+                        .append("Expediente: ").append(alert.getDocumentId())
+                        .append(" (").append(alert.getReferenceDate()).append(")\n")
+                        .append(alert.getMessage()).append("\n\n");
             }
 
-            JOptionPane.showMessageDialog(this, message.toString(),
+            JTextArea report = new JTextArea(message.toString(), 15, 45);
+            report.setEditable(false);
+            report.setLineWrap(true);
+            report.setWrapStyleWord(true);
+            report.setCaretPosition(0);
+
+            JOptionPane.showMessageDialog(this, new JScrollPane(report),
                     "Alertas del sistema", JOptionPane.WARNING_MESSAGE);
         } catch (BusinessException | IllegalStateException e) {
             JOptionPane.showMessageDialog(this, e.getMessage(),
                     "No se pudieron consultar las alertas", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void exportAlertsToTxt() {
+        try {
+            List<Alert> alerts = documentController.obtenerAlertas();
+            if (alerts.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay alertas pendientes para exportar.");
+                return;
+            }
+
+            JFileChooser chooser = new JFileChooser();
+            chooser.setSelectedFile(new File("alertas_" + LocalDate.now() + ".txt"));
+            if (chooser.showSaveDialog(this) != JFileChooser.APPROVE_OPTION) {
+                return;
+            }
+
+            File file = chooser.getSelectedFile();
+            if (!file.getName().toLowerCase().endsWith(".txt")) {
+                file = new File(file.getAbsolutePath() + ".txt");
+            }
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write("REPORTE DE ALERTAS - SISTG UPTC");
+                writer.newLine();
+                writer.write("Fecha de generación: " + LocalDate.now());
+                writer.newLine();
+                writer.write("Total de alertas: " + alerts.size());
+                writer.newLine();
+                writer.write("================================================");
+                writer.newLine();
+                writer.newLine();
+
+                for (Alert alert : alerts) {
+                    writer.write("Tipo: " + alert.getType());
+                    writer.newLine();
+                    writer.write("Expediente: " + alert.getDocumentId());
+                    writer.newLine();
+                    writer.write("Fecha de referencia: " + alert.getReferenceDate());
+                    writer.newLine();
+                    writer.write("Mensaje: " + alert.getMessage());
+                    writer.newLine();
+                    writer.write("------------------------------------------------");
+                    writer.newLine();
+                }
+            }
+
+            JOptionPane.showMessageDialog(this,
+                    "Alertas exportadas correctamente en:\n" + file.getAbsolutePath(),
+                    "Exportar alertas", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this,
+                    "No se pudo guardar el archivo: " + e.getMessage(),
+                    "Error al exportar", JOptionPane.ERROR_MESSAGE);
+        } catch (BusinessException | IllegalStateException e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(),
+                    "No se pudieron exportar las alertas", JOptionPane.ERROR_MESSAGE);
         }
     }
 }
