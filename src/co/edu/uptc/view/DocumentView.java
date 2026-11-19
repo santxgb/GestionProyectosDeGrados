@@ -95,16 +95,18 @@ public class DocumentView extends JFrame {
         form.add(txtObservations);
         content.add(form, BorderLayout.CENTER);
 
-        JPanel buttons = new JPanel(new GridLayout(1, 5, 8, 8));
+        JPanel buttons = new JPanel(new GridLayout(2, 3, 8, 8));
         JButton registerButton = new JButton("Radicar propuesta");
         JButton searchButton = new JButton("Consultar por ID");
         JButton decisionButton = new JButton("Registrar decisión");
         JButton juriesButton = new JButton("Asignar jurados");
+        JButton observationsButton = new JButton("Actualizar observaciones");
         JButton clearButton = new JButton("Limpiar");
         buttons.add(registerButton);
         buttons.add(searchButton);
         buttons.add(decisionButton);
         buttons.add(juriesButton);
+        buttons.add(observationsButton);
         buttons.add(clearButton);
         content.add(buttons, BorderLayout.SOUTH);
 
@@ -112,6 +114,7 @@ public class DocumentView extends JFrame {
         searchButton.addActionListener(e -> searchDocument());
         decisionButton.addActionListener(e -> registerDecision());
         juriesButton.addActionListener(e -> assignJuries());
+        observationsButton.addActionListener(e -> updateObservations());
         clearButton.addActionListener(e -> clearFields());
     }
 
@@ -206,13 +209,18 @@ public class DocumentView extends JFrame {
                         }
                     }
                 }
+                String followUp = document.getDegreeWork().getObservations();
+                message.append("\nObservaciones de seguimiento: ")
+                        .append(followUp == null || followUp.trim().isEmpty()
+                                ? "Sin observaciones" : followUp);
             }
             if (document.getCompany() != null) {
                 message.append("\nEmpresa/entidad: ").append(document.getCompany().getName());
             }
-            if (document.getObservations() != null) {
-                message.append("\nObservaciones: ").append(document.getObservations());
-            }
+            String initialObservations = document.getObservations();
+            message.append("\nObservaciones iniciales de la propuesta: ")
+                    .append(initialObservations == null || initialObservations.trim().isEmpty()
+                            ? "Sin observaciones" : initialObservations);
 
             JTextArea details = new JTextArea(message.toString(), 18, 48);
             details.setEditable(false);
@@ -394,6 +402,57 @@ public class DocumentView extends JFrame {
                     "Jurados asignados correctamente.\n"
                             + "Puede consultarlos desde 'Consultar por ID'.",
                     "Asignación de jurados", JOptionPane.INFORMATION_MESSAGE);
+        } catch (BusinessException | IllegalStateException e) {
+            showError(e.getMessage());
+        }
+    }
+
+    private void updateObservations() {
+        String id = txtId.getText().trim();
+
+        try {
+            Document document = documentController.buscarDocumentoPorId(id);
+            if (document == null) {
+                showError("No existe un expediente con ese identificador.");
+                return;
+            }
+            if (document.getDegreeWork() == null) {
+                showError("Solo se pueden actualizar las observaciones de un trabajo de grado aprobado.");
+                return;
+            }
+
+            String previous = document.getDegreeWork().getObservations();
+            JTextArea text = new JTextArea(previous == null ? "" : previous, 8, 40);
+            text.setLineWrap(true);
+            text.setWrapStyleWord(true);
+
+            JPanel form = new JPanel(new BorderLayout(8, 8));
+            form.add(new JLabel("Observaciones de seguimiento del trabajo:"), BorderLayout.NORTH);
+            form.add(new JScrollPane(text), BorderLayout.CENTER);
+
+            int option = JOptionPane.showConfirmDialog(this, form,
+                    "Actualizar observaciones - " + id,
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (option != JOptionPane.OK_OPTION) {
+                return;
+            }
+
+            String observations = text.getText().trim();
+            int confirmation = JOptionPane.showConfirmDialog(this,
+                    observations.isEmpty()
+                            ? "El texto está vacío. ¿Desea borrar las observaciones de seguimiento?"
+                            : "¿Guardar las observaciones de seguimiento del expediente " + id
+                            + "?\nLas observaciones anteriores serán reemplazadas.",
+                    "Confirmar cambio", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            if (confirmation != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            documentController.actualizarObservaciones(id, observations);
+            JOptionPane.showMessageDialog(this,
+                    "Observaciones de seguimiento actualizadas correctamente.",
+                    "Observaciones", JOptionPane.INFORMATION_MESSAGE);
         } catch (BusinessException | IllegalStateException e) {
             showError(e.getMessage());
         }
