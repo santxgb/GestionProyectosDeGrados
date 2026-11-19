@@ -7,7 +7,10 @@ import co.edu.uptc.model.Document;
 import co.edu.uptc.model.Jury;
 import co.edu.uptc.model.enums.Modality;
 import co.edu.uptc.model.enums.Status;
+import co.edu.uptc.model.Attachment;
 
+import javax.swing.JFileChooser;
+import java.io.File;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -95,25 +98,38 @@ public class DocumentView extends JFrame {
         form.add(txtObservations);
         content.add(form, BorderLayout.CENTER);
 
-        JPanel buttons = new JPanel(new GridLayout(2, 3, 8, 8));
+        JPanel buttons = new JPanel(new GridLayout(3, 3, 8, 8));
         JButton registerButton = new JButton("Radicar propuesta");
         JButton searchButton = new JButton("Consultar por ID");
+        JButton listAllButton = new JButton("Listar expedientes");
+        JButton updateButton = new JButton("Actualizar propuesta");
+        JButton deleteButton = new JButton("Eliminar propuesta");
         JButton decisionButton = new JButton("Registrar decisión");
         JButton juriesButton = new JButton("Asignar jurados");
+        JButton attachmentButton = new JButton("Agregar anexo");
         JButton observationsButton = new JButton("Actualizar observaciones");
         JButton clearButton = new JButton("Limpiar");
+
         buttons.add(registerButton);
         buttons.add(searchButton);
+        buttons.add(listAllButton);
+        buttons.add(updateButton);
+        buttons.add(deleteButton);
         buttons.add(decisionButton);
         buttons.add(juriesButton);
+        buttons.add(attachmentButton);
         buttons.add(observationsButton);
         buttons.add(clearButton);
         content.add(buttons, BorderLayout.SOUTH);
 
         registerButton.addActionListener(e -> registerDocument());
         searchButton.addActionListener(e -> searchDocument());
+        listAllButton.addActionListener(e -> listAllDocuments());
+        updateButton.addActionListener(e -> updateDocument());
+        deleteButton.addActionListener(e -> deleteDocument());
         decisionButton.addActionListener(e -> registerDecision());
         juriesButton.addActionListener(e -> assignJuries());
+        attachmentButton.addActionListener(e -> addAttachment());
         observationsButton.addActionListener(e -> updateObservations());
         clearButton.addActionListener(e -> clearFields());
     }
@@ -169,6 +185,16 @@ public class DocumentView extends JFrame {
                 JOptionPane.showMessageDialog(this, "No existe un expediente con ese identificador.");
                 return;
             }
+            txtId.setText(document.getId());
+            txtTitle.setText(document.getTitle());
+            cmbModality.setSelectedItem(document.getModality().getDisplayName());
+            txtStudent1.setText(document.getStudentIds().get(0));
+            txtStudent2.setText(document.getStudentIds().size() > 1 ? document.getStudentIds().get(1) : "");
+            txtDirector.setText(document.getDirectorId());
+            txtCodirector.setText(document.getCodirectorId() == null ? "" : document.getCodirectorId());
+            txtFilingDate.setText(document.getFilingDate().toString());
+            txtCompany.setText(document.getCompany() == null ? "" : document.getCompany().getName());
+            txtObservations.setText(document.getObservations() == null ? "" : document.getObservations());
 
             StringBuilder message = new StringBuilder();
             message.append("Identificador: ").append(document.getId());
@@ -221,6 +247,17 @@ public class DocumentView extends JFrame {
             message.append("\nObservaciones iniciales de la propuesta: ")
                     .append(initialObservations == null || initialObservations.trim().isEmpty()
                             ? "Sin observaciones" : initialObservations);
+            List<Attachment> attachments = document.getAttachments();
+            if (attachments.isEmpty()) {
+                message.append("\nAnexos: Sin anexos registrados");
+            } else {
+                for (int i = 0; i < attachments.size(); i++) {
+                    Attachment att = attachments.get(i);
+                    message.append("\nAnexo ").append(i + 1).append(": ").append(att.getName())
+                            .append(" (").append(att.getType()).append(" - ").append(att.getUploadDate()).append(")")
+                            .append("\n  Ruta: ").append(att.getPath());
+                }
+            }
 
             JTextArea details = new JTextArea(message.toString(), 18, 48);
             details.setEditable(false);
@@ -453,6 +490,179 @@ public class DocumentView extends JFrame {
             JOptionPane.showMessageDialog(this,
                     "Observaciones de seguimiento actualizadas correctamente.",
                     "Observaciones", JOptionPane.INFORMATION_MESSAGE);
+        } catch (BusinessException | IllegalStateException e) {
+            showError(e.getMessage());
+        }
+    }
+    private void addAttachment() {
+        String id = txtId.getText().trim();
+
+        try {
+            Document document = documentController.buscarDocumentoPorId(id);
+            if (document == null) {
+                showError("No existe un expediente con ese identificador.");
+                return;
+            }
+
+            JTextField name = new JTextField();
+            JTextField type = new JTextField();
+            JTextField path = new JTextField();
+            JTextField date = new JTextField(LocalDate.now().toString());
+            JButton browseButton = new JButton("Buscar...");
+
+            browseButton.addActionListener(e -> {
+                JFileChooser chooser = new JFileChooser();
+                if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                    File file = chooser.getSelectedFile();
+                    path.setText(file.getAbsolutePath());
+                    if (name.getText().trim().isEmpty()) {
+                        name.setText(file.getName());
+                    }
+                }
+            });
+
+            JPanel pathPanel = new JPanel(new BorderLayout(5, 0));
+            pathPanel.add(path, BorderLayout.CENTER);
+            pathPanel.add(browseButton, BorderLayout.EAST);
+
+            JPanel form = new JPanel(new GridLayout(4, 2, 10, 10));
+            form.add(new JLabel("Nombre del anexo:"));
+            form.add(name);
+            form.add(new JLabel("Tipo de documento:"));
+            form.add(type);
+            form.add(new JLabel("Ruta del archivo:"));
+            form.add(pathPanel);
+            form.add(new JLabel("Fecha de carga (AAAA-MM-DD):"));
+            form.add(date);
+
+            int option = JOptionPane.showConfirmDialog(this, form,
+                    "Agregar anexo - " + id,
+                    JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+            if (option != JOptionPane.OK_OPTION) {
+                return;
+            }
+
+            Attachment attachment = new Attachment(
+                    name.getText().trim(),
+                    type.getText().trim(),
+                    path.getText().trim(),
+                    LocalDate.parse(date.getText().trim()));
+
+            documentController.agregarAnexo(id, attachment);
+            JOptionPane.showMessageDialog(this,
+                    "Anexo agregado correctamente.\nPuede consultarlo desde 'Consultar por ID'.",
+                    "Anexos", JOptionPane.INFORMATION_MESSAGE);
+        } catch (DateTimeParseException e) {
+            showError("La fecha debe tener el formato AAAA-MM-DD y ser válida.");
+        } catch (BusinessException | IllegalStateException e) {
+            showError(e.getMessage());
+        }
+    }
+    private void updateDocument() {
+        try {
+            List<String> studentCodes = new ArrayList<>();
+            studentCodes.add(txtStudent1.getText().trim());
+            if (!txtStudent2.getText().trim().isEmpty()) {
+                studentCodes.add(txtStudent2.getText().trim());
+            }
+
+            LocalDate filingDate = LocalDate.parse(txtFilingDate.getText().trim());
+            Modality modality = modalities[cmbModality.getSelectedIndex()];
+
+            Document document = new Document(
+                    txtId.getText().trim(),
+                    txtTitle.getText().trim(),
+                    modality,
+                    studentCodes,
+                    txtDirector.getText().trim(),
+                    filingDate);
+
+            String codirectorId = txtCodirector.getText().trim();
+            if (!codirectorId.isEmpty()) {
+                document.setCodirectorId(codirectorId);
+            }
+
+            String companyName = txtCompany.getText().trim();
+            if (!companyName.isEmpty()) {
+                document.setCompany(new Company(companyName, "", "", ""));
+            }
+
+            String observations = txtObservations.getText().trim();
+            if (!observations.isEmpty()) {
+                document.setObservations(observations);
+            }
+
+            int confirmation = JOptionPane.showConfirmDialog(this,
+                    "¿Confirma la actualización de la propuesta " + document.getId() + "?",
+                    "Confirmar actualización", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            if (confirmation != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            documentController.actualizarDocumento(document);
+            JOptionPane.showMessageDialog(this, "Propuesta actualizada correctamente.");
+        } catch (DateTimeParseException e) {
+            showError("La fecha debe tener el formato AAAA-MM-DD y ser válida.");
+        } catch (BusinessException | IllegalStateException e) {
+            showError(e.getMessage());
+        }
+    }
+
+    private void deleteDocument() {
+        String id = txtId.getText().trim();
+
+        try {
+            Document document = documentController.buscarDocumentoPorId(id);
+            if (document == null) {
+                showError("No existe un expediente con ese identificador.");
+                return;
+            }
+
+            int confirmation = JOptionPane.showConfirmDialog(this,
+                    "¿Confirma que desea eliminar la propuesta " + id + "?\n"
+                            + "Esta acción no se puede deshacer.",
+                    "Confirmar eliminación", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            if (confirmation != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            documentController.eliminarDocumento(id);
+            JOptionPane.showMessageDialog(this, "Propuesta eliminada correctamente.");
+            clearFields();
+        } catch (BusinessException | IllegalStateException e) {
+            showError(e.getMessage());
+        }
+    }
+    
+    private void listAllDocuments() {
+        try {
+            List<Document> documents = documentController.listarDocumentos();
+            if (documents.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay expedientes registrados.");
+                return;
+            }
+
+            StringBuilder message = new StringBuilder();
+            for (Document document : documents) {
+                message.append("Expediente: ").append(document.getId()).append("\n");
+                message.append("Título: ").append(document.getTitle()).append("\n");
+                message.append("Modalidad: ").append(document.getModality().getDisplayName()).append("\n");
+                message.append("Estudiantes: ").append(document.getStudentIds()).append("\n");
+                message.append("Director: ").append(document.getDirectorId()).append("\n");
+                message.append("Etapa: ").append(document.getStage().getDisplayName()).append("\n");
+                message.append("Estado: ").append(document.getStatus().getDisplayName()).append("\n\n");
+            }
+
+            JTextArea report = new JTextArea(message.toString(), 18, 48);
+            report.setEditable(false);
+            report.setLineWrap(true);
+            report.setWrapStyleWord(true);
+            report.setCaretPosition(0);
+
+            JOptionPane.showMessageDialog(this, new JScrollPane(report),
+                    "Consulta general de expedientes", JOptionPane.INFORMATION_MESSAGE);
         } catch (BusinessException | IllegalStateException e) {
             showError(e.getMessage());
         }
