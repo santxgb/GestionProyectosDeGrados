@@ -29,7 +29,7 @@ public class MainView extends JFrame {
         this.teacherController = teacherController;
 
         setTitle("SisTG UPTC");
-        setSize(520, 330);
+        setSize(520, 390);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
@@ -39,20 +39,23 @@ public class MainView extends JFrame {
                 SwingConstants.CENTER);
         add(title, BorderLayout.NORTH);
 
-        JPanel buttons = new JPanel(new GridLayout(4, 1, 10, 10));
+        JPanel buttons = new JPanel(new GridLayout(5, 1, 10, 10));
         JButton studentsButton = new JButton("Gestionar estudiantes");
         JButton teachersButton = new JButton("Gestionar docentes");
+        JButton documentsButton = new JButton("Radicar y consultar propuestas");
         JButton alertsButton = new JButton("Consultar alertas");
         JButton exitButton = new JButton("Salir");
 
         buttons.add(studentsButton);
         buttons.add(teachersButton);
+        buttons.add(documentsButton);
         buttons.add(alertsButton);
         buttons.add(exitButton);
         add(buttons, BorderLayout.CENTER);
 
         studentsButton.addActionListener(e -> openStudents());
         teachersButton.addActionListener(e -> openTeachers());
+        documentsButton.addActionListener(e -> openDocuments());
         alertsButton.addActionListener(e -> showAlerts());
         exitButton.addActionListener(e -> dispose());
     }
@@ -65,6 +68,11 @@ public class MainView extends JFrame {
     private void openTeachers() {
         TeacherView teacherView = new TeacherView(teacherController);
         teacherView.setVisible(true);
+    }
+
+    private void openDocuments() {
+        DocumentView documentView = new DocumentView(documentController);
+        documentView.setVisible(true);
     }
 
     private void showAlerts() {
