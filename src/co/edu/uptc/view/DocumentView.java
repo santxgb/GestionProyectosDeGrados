@@ -5,6 +5,7 @@ import co.edu.uptc.exception.BusinessException;
 import co.edu.uptc.model.Company;
 import co.edu.uptc.model.Document;
 import co.edu.uptc.model.enums.Modality;
+import co.edu.uptc.model.enums.Status;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -90,17 +91,20 @@ public class DocumentView extends JFrame {
         form.add(txtObservations);
         content.add(form, BorderLayout.CENTER);
 
-        JPanel buttons = new JPanel(new GridLayout(1, 3, 10, 10));
+        JPanel buttons = new JPanel(new GridLayout(1, 4, 10, 10));
         JButton registerButton = new JButton("Radicar propuesta");
         JButton searchButton = new JButton("Consultar por ID");
+        JButton decisionButton = new JButton("Registrar decisión");
         JButton clearButton = new JButton("Limpiar");
         buttons.add(registerButton);
         buttons.add(searchButton);
+        buttons.add(decisionButton);
         buttons.add(clearButton);
         content.add(buttons, BorderLayout.SOUTH);
 
         registerButton.addActionListener(e -> registerDocument());
         searchButton.addActionListener(e -> searchDocument());
+        decisionButton.addActionListener(e -> registerDecision());
         clearButton.addActionListener(e -> clearFields());
     }
 
@@ -167,6 +171,15 @@ public class DocumentView extends JFrame {
             message.append("\nRadicación: ").append(document.getFilingDate());
             message.append("\nEtapa: ").append(document.getStage().getDisplayName());
             message.append("\nEstado: ").append(document.getStatus().getDisplayName());
+            if (document.getDecisionDate() != null) {
+                message.append("\nFecha de decisión: ").append(document.getDecisionDate());
+                message.append("\nActa de decisión: ").append(document.getStatusAct());
+            }
+            if (document.getDegreeWork() != null) {
+                message.append("\nPresentación desde: ")
+                        .append(document.getDegreeWork().getEarliestSubmissionDate());
+                message.append("\nVencimiento: ").append(document.getDegreeWork().getDeadline());
+            }
             if (document.getCompany() != null) {
                 message.append("\nEmpresa/entidad: ").append(document.getCompany().getName());
             }
@@ -176,6 +189,78 @@ public class DocumentView extends JFrame {
 
             JOptionPane.showMessageDialog(this, message.toString(),
                     "Consulta de expediente", JOptionPane.INFORMATION_MESSAGE);
+        } catch (BusinessException | IllegalStateException e) {
+            showError(e.getMessage());
+        }
+    }
+
+    private void registerDecision() {
+        JTextField decisionId = new JTextField(txtId.getText().trim());
+        JTextField decisionDate = new JTextField();
+        JTextField decisionAct = new JTextField();
+
+        Status[] decisions = {
+                Status.APROBADO,
+                Status.APROBADO_CON_MODIFICACIONES,
+                Status.NO_APROBADO
+        };
+        JComboBox<String> decisionOptions = new JComboBox<>();
+        for (Status decision : decisions) {
+            decisionOptions.addItem(decision.getDisplayName());
+        }
+
+        JPanel form = new JPanel(new GridLayout(4, 2, 10, 10));
+        form.add(new JLabel("Identificador de la propuesta:"));
+        form.add(decisionId);
+        form.add(new JLabel("Decisión del Comité:"));
+        form.add(decisionOptions);
+        form.add(new JLabel("Fecha de decisión (AAAA-MM-DD):"));
+        form.add(decisionDate);
+        form.add(new JLabel("Número o referencia del acta:"));
+        form.add(decisionAct);
+
+        int option = JOptionPane.showConfirmDialog(this, form,
+                "Registrar decisión del Comité Curricular",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+        if (option != JOptionPane.OK_OPTION) {
+            return;
+        }
+
+        try {
+            String id = decisionId.getText().trim();
+            Status decision = decisions[decisionOptions.getSelectedIndex()];
+            LocalDate date = LocalDate.parse(decisionDate.getText().trim());
+            String act = decisionAct.getText().trim();
+
+            int confirmation = JOptionPane.showConfirmDialog(this,
+                    "¿Confirma la decisión «" + decision.getDisplayName()
+                            + "» para el expediente " + id + "?\n"
+                            + "Una vez registrada, no podrá volver a decidir esta propuesta.",
+                    "Confirmar decisión", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            if (confirmation != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            documentController.registrarDecisionDocumento(id, decision, date, act);
+            Document updated = documentController.buscarDocumentoPorId(id);
+            txtId.setText(id);
+
+            StringBuilder message = new StringBuilder("Decisión registrada correctamente.");
+            message.append("\nEstado: ").append(updated.getStatus().getDisplayName());
+            if (updated.getDegreeWork() != null) {
+                message.append("\nSe generó el trabajo de grado.");
+                message.append("\nPresentación desde: ")
+                        .append(updated.getDegreeWork().getEarliestSubmissionDate());
+                message.append("\nFecha máxima: ")
+                        .append(updated.getDegreeWork().getDeadline());
+            } else {
+                message.append("\nLa propuesta no genera trabajo de grado.");
+            }
+            JOptionPane.showMessageDialog(this, message.toString(),
+                    "Decisión del Comité", JOptionPane.INFORMATION_MESSAGE);
+        } catch (DateTimeParseException e) {
+            showError("La fecha debe tener el formato AAAA-MM-DD y ser válida.");
         } catch (BusinessException | IllegalStateException e) {
             showError(e.getMessage());
         }
