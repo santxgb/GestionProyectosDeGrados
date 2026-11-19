@@ -4,15 +4,19 @@ import co.edu.uptc.controller.DocumentController;
 import co.edu.uptc.exception.BusinessException;
 import co.edu.uptc.model.Company;
 import co.edu.uptc.model.Document;
+import co.edu.uptc.model.Jury;
 import co.edu.uptc.model.enums.Modality;
 import co.edu.uptc.model.enums.Status;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import java.awt.BorderLayout;
@@ -40,8 +44,8 @@ public class DocumentView extends JFrame {
     public DocumentView(DocumentController documentController) {
         this.documentController = documentController;
 
-        setTitle("Radicación de propuestas");
-        setSize(680, 600);
+        setTitle("Gestión de expedientes");
+        setSize(760, 620);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -91,20 +95,23 @@ public class DocumentView extends JFrame {
         form.add(txtObservations);
         content.add(form, BorderLayout.CENTER);
 
-        JPanel buttons = new JPanel(new GridLayout(1, 4, 10, 10));
+        JPanel buttons = new JPanel(new GridLayout(1, 5, 8, 8));
         JButton registerButton = new JButton("Radicar propuesta");
         JButton searchButton = new JButton("Consultar por ID");
         JButton decisionButton = new JButton("Registrar decisión");
+        JButton juriesButton = new JButton("Asignar jurados");
         JButton clearButton = new JButton("Limpiar");
         buttons.add(registerButton);
         buttons.add(searchButton);
         buttons.add(decisionButton);
+        buttons.add(juriesButton);
         buttons.add(clearButton);
         content.add(buttons, BorderLayout.SOUTH);
 
         registerButton.addActionListener(e -> registerDocument());
         searchButton.addActionListener(e -> searchDocument());
         decisionButton.addActionListener(e -> registerDecision());
+        juriesButton.addActionListener(e -> assignJuries());
         clearButton.addActionListener(e -> clearFields());
     }
 
@@ -179,6 +186,26 @@ public class DocumentView extends JFrame {
                 message.append("\nPresentación desde: ")
                         .append(document.getDegreeWork().getEarliestSubmissionDate());
                 message.append("\nVencimiento: ").append(document.getDegreeWork().getDeadline());
+                List<Jury> juries = document.getDegreeWork().getJuries();
+                if (juries.isEmpty()) {
+                    message.append("\nJurados: Sin asignar");
+                } else {
+                    message.append("\nActa de asignación de jurados: ")
+                            .append(document.getDegreeWork().getJuryAssignmentAct());
+                    for (int i = 0; i < juries.size(); i++) {
+                        Jury jury = juries.get(i);
+                        message.append("\nJurado ").append(i + 1).append(": ")
+                                .append(jury.getFullName());
+                        message.append("\n  Identificación: ").append(jury.getId());
+                        message.append("\n  Correo: ").append(jury.getEmail());
+                        message.append("\n  Teléfono: ").append(jury.getPhone());
+                        message.append("\n  Tipo: ")
+                                .append(jury.isExternal() ? "Externo" : "Interno");
+                        if (jury.isExternal()) {
+                            message.append("\n  Institución: ").append(jury.getInstitution());
+                        }
+                    }
+                }
             }
             if (document.getCompany() != null) {
                 message.append("\nEmpresa/entidad: ").append(document.getCompany().getName());
@@ -187,7 +214,12 @@ public class DocumentView extends JFrame {
                 message.append("\nObservaciones: ").append(document.getObservations());
             }
 
-            JOptionPane.showMessageDialog(this, message.toString(),
+            JTextArea details = new JTextArea(message.toString(), 18, 48);
+            details.setEditable(false);
+            details.setLineWrap(true);
+            details.setWrapStyleWord(true);
+            details.setCaretPosition(0);
+            JOptionPane.showMessageDialog(this, new JScrollPane(details),
                     "Consulta de expediente", JOptionPane.INFORMATION_MESSAGE);
         } catch (BusinessException | IllegalStateException e) {
             showError(e.getMessage());
@@ -261,6 +293,107 @@ public class DocumentView extends JFrame {
                     "Decisión del Comité", JOptionPane.INFORMATION_MESSAGE);
         } catch (DateTimeParseException e) {
             showError("La fecha debe tener el formato AAAA-MM-DD y ser válida.");
+        } catch (BusinessException | IllegalStateException e) {
+            showError(e.getMessage());
+        }
+    }
+
+    private void assignJuries() {
+        String id = txtId.getText().trim();
+
+        try {
+            Document document = documentController.buscarDocumentoPorId(id);
+            if (document == null) {
+                showError("No existe un expediente con ese identificador.");
+                return;
+            }
+            if (document.getDegreeWork() == null) {
+                showError("Solo se pueden asignar jurados a un trabajo de grado aprobado.");
+                return;
+            }
+
+            if (!document.getDegreeWork().getJuries().isEmpty()) {
+                int replace = JOptionPane.showConfirmDialog(this,
+                        "Este trabajo ya tiene jurados asignados.\n"
+                                + "¿Desea reemplazarlos?",
+                        "Reemplazar jurados", JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+                if (replace != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            }
+
+            JComboBox<String> count = new JComboBox<>(new String[]{"1", "2"});
+            JTextField act = new JTextField();
+            JPanel initialForm = new JPanel(new GridLayout(2, 2, 10, 10));
+            initialForm.add(new JLabel("Cantidad de jurados:"));
+            initialForm.add(count);
+            initialForm.add(new JLabel("Acta de asignación:"));
+            initialForm.add(act);
+
+            int option = JOptionPane.showConfirmDialog(this, initialForm,
+                    "Asignar jurados - " + id, JOptionPane.OK_CANCEL_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            if (option != JOptionPane.OK_OPTION) {
+                return;
+            }
+
+            int quantity = count.getSelectedIndex() + 1;
+            List<Jury> juries = new ArrayList<>();
+
+            for (int i = 0; i < quantity; i++) {
+                JTextField juryId = new JTextField();
+                JTextField lastNames = new JTextField();
+                JTextField firstNames = new JTextField();
+                JTextField email = new JTextField();
+                JTextField phone = new JTextField();
+                JCheckBox external = new JCheckBox("Es externo");
+                JTextField institution = new JTextField();
+
+                JPanel juryForm = new JPanel(new GridLayout(7, 2, 10, 10));
+                juryForm.add(new JLabel("Identificación:"));
+                juryForm.add(juryId);
+                juryForm.add(new JLabel("Apellidos:"));
+                juryForm.add(lastNames);
+                juryForm.add(new JLabel("Nombres:"));
+                juryForm.add(firstNames);
+                juryForm.add(new JLabel("Correo:"));
+                juryForm.add(email);
+                juryForm.add(new JLabel("Teléfono:"));
+                juryForm.add(phone);
+                juryForm.add(new JLabel("Tipo:"));
+                juryForm.add(external);
+                juryForm.add(new JLabel("Institución (si es externo):"));
+                juryForm.add(institution);
+
+                int juryOption = JOptionPane.showConfirmDialog(this, juryForm,
+                        "Datos del jurado " + (i + 1),
+                        JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE);
+                if (juryOption != JOptionPane.OK_OPTION) {
+                    return;
+                }
+
+                juries.add(new Jury(
+                        juryId.getText().trim(), lastNames.getText().trim(),
+                        firstNames.getText().trim(), email.getText().trim(),
+                        phone.getText().trim(), external.isSelected(),
+                        external.isSelected() ? institution.getText().trim() : null));
+            }
+
+            int confirmation = JOptionPane.showConfirmDialog(this,
+                    "¿Guardar la asignación de " + quantity + " jurado(s) al expediente "
+                            + id + "?",
+                    "Confirmar asignación", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            if (confirmation != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            documentController.asignarJurados(id, act.getText().trim(), juries);
+            JOptionPane.showMessageDialog(this,
+                    "Jurados asignados correctamente.\n"
+                            + "Puede consultarlos desde 'Consultar por ID'.",
+                    "Asignación de jurados", JOptionPane.INFORMATION_MESSAGE);
         } catch (BusinessException | IllegalStateException e) {
             showError(e.getMessage());
         }
