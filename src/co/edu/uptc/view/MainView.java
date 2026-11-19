@@ -2,6 +2,7 @@ package co.edu.uptc.view;
 
 import co.edu.uptc.controller.DocumentController;
 import co.edu.uptc.controller.StudentController;
+import co.edu.uptc.controller.TeacherController;
 import co.edu.uptc.exception.BusinessException;
 import co.edu.uptc.model.Alert;
 
@@ -19,14 +20,16 @@ public class MainView extends JFrame {
 
     private final DocumentController documentController;
     private final StudentController studentController;
+    private final TeacherController teacherController;
 
-    /** Recibe los controladores utilizados por la ventana principal. */
-    public MainView(DocumentController documentController, StudentController studentController) {
+    public MainView(DocumentController documentController, StudentController studentController,
+                    TeacherController teacherController) {
         this.documentController = documentController;
         this.studentController = studentController;
+        this.teacherController = teacherController;
 
         setTitle("SisTG UPTC");
-        setSize(520, 280);
+        setSize(520, 330);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
@@ -36,17 +39,20 @@ public class MainView extends JFrame {
                 SwingConstants.CENTER);
         add(title, BorderLayout.NORTH);
 
-        JPanel buttons = new JPanel(new GridLayout(3, 1, 10, 10));
+        JPanel buttons = new JPanel(new GridLayout(4, 1, 10, 10));
         JButton studentsButton = new JButton("Gestionar estudiantes");
+        JButton teachersButton = new JButton("Gestionar docentes");
         JButton alertsButton = new JButton("Consultar alertas");
         JButton exitButton = new JButton("Salir");
 
         buttons.add(studentsButton);
+        buttons.add(teachersButton);
         buttons.add(alertsButton);
         buttons.add(exitButton);
         add(buttons, BorderLayout.CENTER);
 
         studentsButton.addActionListener(e -> openStudents());
+        teachersButton.addActionListener(e -> openTeachers());
         alertsButton.addActionListener(e -> showAlerts());
         exitButton.addActionListener(e -> dispose());
     }
@@ -54,6 +60,11 @@ public class MainView extends JFrame {
     private void openStudents() {
         StudentView studentView = new StudentView(studentController);
         studentView.setVisible(true);
+    }
+
+    private void openTeachers() {
+        TeacherView teacherView = new TeacherView(teacherController);
+        teacherView.setVisible(true);
     }
 
     private void showAlerts() {
