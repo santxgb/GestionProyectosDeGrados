@@ -54,17 +54,23 @@ public class TeacherView extends JFrame {
         form.add(txtPhone);
         content.add(form, BorderLayout.CENTER);
 
-        JPanel buttons = new JPanel(new GridLayout(1, 3, 10, 10));
+        JPanel buttons = new JPanel(new GridLayout(2, 3, 10, 10));
         JButton registerButton = new JButton("Registrar");
         JButton searchButton = new JButton("Buscar por ID");
+        JButton updateButton = new JButton("Actualizar");
+        JButton deleteButton = new JButton("Eliminar");
         JButton clearButton = new JButton("Limpiar");
         buttons.add(registerButton);
         buttons.add(searchButton);
+        buttons.add(updateButton);
+        buttons.add(deleteButton);
         buttons.add(clearButton);
         content.add(buttons, BorderLayout.SOUTH);
 
         registerButton.addActionListener(e -> registerTeacher());
         searchButton.addActionListener(e -> searchTeacher());
+        updateButton.addActionListener(e -> updateTeacher());
+        deleteButton.addActionListener(e -> deleteTeacher());
         clearButton.addActionListener(e -> clearFields());
     }
 
@@ -103,6 +109,56 @@ public class TeacherView extends JFrame {
         }
     }
 
+    private void updateTeacher() {
+        Teacher teacher = new Teacher(
+                txtId.getText().trim(),
+                txtLastNames.getText().trim(),
+                txtFirstNames.getText().trim(),
+                txtEmail.getText().trim(),
+                txtPhone.getText().trim());
+
+        try {
+            int confirmation = JOptionPane.showConfirmDialog(this,
+                    "¿Confirma la actualización del docente con identificación " + teacher.getId() + "?",
+                    "Confirmar actualización", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            if (confirmation != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            teacherController.actualizarDocente(teacher);
+            JOptionPane.showMessageDialog(this, "Docente actualizado correctamente.");
+        } catch (BusinessException | IllegalStateException e) {
+            showError(e.getMessage());
+        }
+    }
+
+    private void deleteTeacher() {
+        String id = txtId.getText().trim();
+
+        try {
+            Teacher teacher = teacherController.buscarProfesorPorId(id);
+            if (teacher == null) {
+                showError("No se encontró un docente con esa identificación.");
+                return;
+            }
+
+            int confirmation = JOptionPane.showConfirmDialog(this,
+                    "¿Confirma que desea eliminar al docente " + teacher.getFirstNames()
+                            + " " + teacher.getLastNames() + " (" + id + ")?",
+                    "Confirmar eliminación", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            if (confirmation != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            teacherController.eliminarDocente(id);
+            JOptionPane.showMessageDialog(this, "Docente eliminado correctamente.");
+            clearFields();
+        } catch (BusinessException | IllegalStateException e) {
+            showError(e.getMessage());
+        }
+    }
     private void clearFields() {
         txtId.setText("");
         txtFirstNames.setText("");

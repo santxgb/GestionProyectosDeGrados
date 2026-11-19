@@ -58,17 +58,23 @@ public class StudentView extends JFrame {
         form.add(txtPhone);
         content.add(form, BorderLayout.CENTER);
 
-        JPanel buttons = new JPanel(new GridLayout(1, 3, 10, 10));
+        JPanel buttons = new JPanel(new GridLayout(2, 3, 10, 10));
         JButton registerButton = new JButton("Registrar");
         JButton searchButton = new JButton("Buscar por código");
+        JButton updateButton = new JButton("Actualizar");
+        JButton deleteButton = new JButton("Eliminar");
         JButton clearButton = new JButton("Limpiar");
         buttons.add(registerButton);
         buttons.add(searchButton);
+        buttons.add(updateButton);
+        buttons.add(deleteButton);
         buttons.add(clearButton);
         content.add(buttons, BorderLayout.SOUTH);
 
         registerButton.addActionListener(e -> registerStudent());
         searchButton.addActionListener(e -> searchStudent());
+        updateButton.addActionListener(e -> updateStudent());
+        deleteButton.addActionListener(e -> deleteStudent());
         clearButton.addActionListener(e -> clearFields());
     }
 
@@ -104,6 +110,57 @@ public class StudentView extends JFrame {
             txtLastNames.setText(student.getLastNames());
             txtEmail.setText(student.getEmail());
             txtPhone.setText(student.getPhone());
+        } catch (BusinessException | IllegalStateException e) {
+            showError(e.getMessage());
+        }
+    }
+    private void updateStudent() {
+        Student student = new Student(
+                txtIdNumber.getText().trim(),
+                txtCode.getText().trim(),
+                txtLastNames.getText().trim(),
+                txtFirstNames.getText().trim(),
+                txtEmail.getText().trim(),
+                txtPhone.getText().trim());
+
+        try {
+            int confirmation = JOptionPane.showConfirmDialog(this,
+                    "¿Confirma la actualización del estudiante con código " + student.getCode() + "?",
+                    "Confirmar actualización", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+            if (confirmation != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            studentController.actualizarEstudiante(student);
+            JOptionPane.showMessageDialog(this, "Estudiante actualizado correctamente.");
+        } catch (BusinessException | IllegalStateException e) {
+            showError(e.getMessage());
+        }
+    }
+
+    private void deleteStudent() {
+        String code = txtCode.getText().trim();
+
+        try {
+            Student student = studentController.buscarEstudiantePorCodigo(code);
+            if (student == null) {
+                showError("No se encontró un estudiante con ese código.");
+                return;
+            }
+
+            int confirmation = JOptionPane.showConfirmDialog(this,
+                    "¿Confirma que desea eliminar al estudiante " + student.getFirstNames()
+                            + " " + student.getLastNames() + " (" + code + ")?",
+                    "Confirmar eliminación", JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+            if (confirmation != JOptionPane.YES_OPTION) {
+                return;
+            }
+
+            studentController.eliminarEstudiante(code);
+            JOptionPane.showMessageDialog(this, "Estudiante eliminado correctamente.");
+            clearFields();
         } catch (BusinessException | IllegalStateException e) {
             showError(e.getMessage());
         }
