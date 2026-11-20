@@ -1,5 +1,9 @@
 package co.edu.uptc.service;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
 import java.util.List;
@@ -178,6 +182,38 @@ public class DocumentService {
             }
         }
         return alerts;
+    }
+
+    public void exportAlertsToTxt(File file, LocalDate today) throws IOException {
+        List<Alert> alerts = getAlerts(today);
+        if (alerts.isEmpty()) {
+            throw new BusinessException("No hay alertas pendientes para exportar.");
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write("REPORTE DE ALERTAS - SISTG UPTC");
+            writer.newLine();
+            writer.write("Fecha de generación: " + today);
+            writer.newLine();
+            writer.write("Total de alertas: " + alerts.size());
+            writer.newLine();
+            writer.write("================================================");
+            writer.newLine();
+            writer.newLine();
+
+            for (Alert alert : alerts) {
+                writer.write("Tipo: " + alert.getType());
+                writer.newLine();
+                writer.write("Expediente: " + alert.getDocumentId());
+                writer.newLine();
+                writer.write("Fecha de referencia: " + alert.getReferenceDate());
+                writer.newLine();
+                writer.write("Mensaje: " + alert.getMessage());
+                writer.newLine();
+                writer.write("------------------------------------------------");
+                writer.newLine();
+            }
+        }
     }
 
     private List<Document> orderDegreeWorks(List<Document> documents, LocalDate today) {

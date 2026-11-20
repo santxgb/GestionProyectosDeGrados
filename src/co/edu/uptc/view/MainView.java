@@ -21,9 +21,7 @@ import java.awt.GridLayout;
 import java.time.LocalDate;
 import java.util.List;
 import javax.swing.JFileChooser;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 public class MainView extends JFrame {
@@ -136,7 +134,7 @@ public class MainView extends JFrame {
         }
     }
 
-   private void showAlerts(boolean showWhenEmpty) {
+    private void showAlerts(boolean showWhenEmpty) {
         try {
             List<Alert> alerts = documentController.obtenerAlertas();
 
@@ -188,30 +186,7 @@ public class MainView extends JFrame {
                 file = new File(file.getAbsolutePath() + ".txt");
             }
 
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-                writer.write("REPORTE DE ALERTAS - SISTG UPTC");
-                writer.newLine();
-                writer.write("Fecha de generación: " + LocalDate.now());
-                writer.newLine();
-                writer.write("Total de alertas: " + alerts.size());
-                writer.newLine();
-                writer.write("================================================");
-                writer.newLine();
-                writer.newLine();
-
-                for (Alert alert : alerts) {
-                    writer.write("Tipo: " + alert.getType());
-                    writer.newLine();
-                    writer.write("Expediente: " + alert.getDocumentId());
-                    writer.newLine();
-                    writer.write("Fecha de referencia: " + alert.getReferenceDate());
-                    writer.newLine();
-                    writer.write("Mensaje: " + alert.getMessage());
-                    writer.newLine();
-                    writer.write("------------------------------------------------");
-                    writer.newLine();
-                }
-            }
+            documentController.exportarAlertasTxt(file);
 
             JOptionPane.showMessageDialog(this,
                     "Alertas exportadas correctamente en:\n" + file.getAbsolutePath(),

@@ -6,6 +6,8 @@ import co.edu.uptc.model.Document;
 import co.edu.uptc.model.Jury;
 import co.edu.uptc.model.enums.Status;
 import co.edu.uptc.service.DocumentService;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -31,6 +33,10 @@ public class DocumentController {
 
     public List<Alert> obtenerAlertas() {
         return documentService.getAlerts(LocalDate.now());
+    }
+
+    public void exportarAlertasTxt(File file) throws IOException {
+        documentService.exportAlertsToTxt(file, LocalDate.now());
     }
 
     public void registrarDocumento(Document document) {
