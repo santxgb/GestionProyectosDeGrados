@@ -186,6 +186,20 @@ public class MainView extends JFrame {
                 file = new File(file.getAbsolutePath() + ".txt");
             }
 
+            if (file.exists()) {
+                int confirmacion = JOptionPane.showConfirmDialog(
+                        this,
+                        "El archivo ya existe:\n" + file.getAbsolutePath()
+                                + "\n¿Desea reemplazarlo?",
+                        "Confirmar reemplazo",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+
+                if (confirmacion != JOptionPane.YES_OPTION) {
+                    return;
+                }
+            }
+
             documentController.exportarAlertasTxt(file);
 
             JOptionPane.showMessageDialog(this,
