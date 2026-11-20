@@ -1,3 +1,11 @@
+### Maven y compilación Java ###
+/target/
+*.class
+
+### Archivos locales de IntelliJ IDEA ###
+.idea/
+*.iml
+
 ### IntelliJ IDEA ###
 out/
 !**/src/main/**/out/
