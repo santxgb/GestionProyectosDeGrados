@@ -560,6 +560,13 @@ public class DocumentView extends JFrame {
     }
     private void updateDocument() {
         try {
+            String id = txtId.getText().trim();
+            Document document = documentController.buscarDocumentoPorId(id);
+            if (document == null) {
+                showError("No existe un expediente con ese identificador.");
+                return;
+            }
+
             List<String> studentCodes = new ArrayList<>();
             studentCodes.add(txtStudent1.getText().trim());
             if (!txtStudent2.getText().trim().isEmpty()) {
@@ -568,36 +575,36 @@ public class DocumentView extends JFrame {
 
             LocalDate filingDate = LocalDate.parse(txtFilingDate.getText().trim());
             Modality modality = modalities[cmbModality.getSelectedIndex()];
-
-            Document document = new Document(
-                    txtId.getText().trim(),
-                    txtTitle.getText().trim(),
-                    modality,
-                    studentCodes,
-                    txtDirector.getText().trim(),
-                    filingDate);
-
             String codirectorId = txtCodirector.getText().trim();
-            if (!codirectorId.isEmpty()) {
-                document.setCodirectorId(codirectorId);
-            }
-
             String companyName = txtCompany.getText().trim();
-            if (!companyName.isEmpty()) {
-                document.setCompany(new Company(companyName, "", "", ""));
-            }
-
             String observations = txtObservations.getText().trim();
-            if (!observations.isEmpty()) {
-                document.setObservations(observations);
-            }
 
             int confirmation = JOptionPane.showConfirmDialog(this,
-                    "¿Confirma la actualización de la propuesta " + document.getId() + "?",
+                    "¿Confirma la actualización de la propuesta " + id + "?",
                     "Confirmar actualización", JOptionPane.YES_NO_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
             if (confirmation != JOptionPane.YES_OPTION) {
                 return;
+            }
+
+            document.setTitle(txtTitle.getText().trim());
+            document.setModality(modality);
+            document.setStudentIds(studentCodes);
+            document.setDirectorId(txtDirector.getText().trim());
+            document.setCodirectorId(codirectorId.isEmpty() ? null : codirectorId);
+            document.setFilingDate(filingDate);
+            document.setObservations(observations.isEmpty() ? null : observations);
+
+            if (companyName.isEmpty()) {
+                document.setCompany(null);
+            } else if (document.getCompany() == null) {
+                document.setCompany(new Company(companyName, "", "", ""));
+            } else {
+                Company previousCompany = document.getCompany();
+                document.setCompany(new Company(companyName,
+                        previousCompany.getContactName(),
+                        previousCompany.getContactEmail(),
+                        previousCompany.getContactPhone()));
             }
 
             documentController.actualizarDocumento(document);
@@ -635,7 +642,7 @@ public class DocumentView extends JFrame {
             showError(e.getMessage());
         }
     }
-    
+
     private void listAllDocuments() {
         try {
             List<Document> documents = documentController.listarDocumentos();
