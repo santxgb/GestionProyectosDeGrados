@@ -1,0 +1,54 @@
+package co.edu.uptc.controller.fx;
+
+import co.edu.uptc.main.Main;
+import co.edu.uptc.view.MainView;
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+
+public class MainFxController {
+
+    @FXML
+    private Label statusLabel;
+
+    private MainView swingWindow;
+
+    @FXML
+    private void onOpenSwing() {
+        statusLabel.setText("Abriendo la interfaz existente...");
+        SwingUtilities.invokeLater(() -> {
+            try {
+                if (swingWindow == null || !swingWindow.isDisplayable()) {
+                    swingWindow = Main.createMainView();
+                    swingWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                }
+                swingWindow.setVisible(true);
+                swingWindow.toFront();
+                Platform.runLater(() -> statusLabel.setText("Interfaz Swing abierta correctamente."));
+            } catch (RuntimeException exception) {
+                Platform.runLater(() -> statusLabel.setText(
+                        "No se pudo abrir Swing: " + exception.getMessage()));
+            }
+        });
+    }
+
+    @FXML
+    private void onAbout() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Acerca de SisTG");
+        alert.setHeaderText("SisTG UPTC");
+        alert.setContentText("Sistema de seguimiento de propuestas y trabajos de grado.\n"
+                + "Programación II - UPTC, Seccional Sogamoso.\n\n"
+                + "La interfaz se está migrando progresivamente de Swing a JavaFX.");
+        alert.showAndWait();
+    }
+
+    @FXML
+    private void onCloseJavaFx() {
+        Platform.exit();
+    }
+}

@@ -11,6 +11,10 @@ import co.edu.uptc.view.MainView;
 public class Main {
 
     public static void main(String[] args) {
+        createMainView().setVisible(true);
+    }
+
+    public static MainView createMainView() {
         DocumentService documentService = new DocumentService();
         DocumentController documentController = new DocumentController(documentService);
 
@@ -20,7 +24,6 @@ public class Main {
         TeacherService teacherService = new TeacherService();
         TeacherController teacherController = new TeacherController(teacherService);
 
-        MainView mainView = new MainView(documentController, studentController, teacherController);
-        mainView.setVisible(true);
+        return new MainView(documentController, studentController, teacherController);
     }
 }
