@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-/** Recibe los eventos de documentView.fxml; la lógica se delega al DocumentController. */
 public class DocumentFxController {
 
     @FXML private TextField idField;
@@ -53,9 +52,11 @@ public class DocumentFxController {
     @FXML private TableColumn<Document, String> filingDateColumn;
     @FXML private TextArea detailsArea;
     @FXML private Label statusLabel;
+    @FXML private Label editModeLabel;
     @FXML private Button closeButton;
 
     private DocumentController documentController;
+    private String editingId;
 
     @FXML
     private void initialize() {
@@ -94,7 +95,6 @@ public class DocumentFxController {
                 });
     }
 
-    /** Se llama desde MainFxController, una vez FXMLLoader ha creado la vista. */
     public void setDocumentController(DocumentController documentController) {
         this.documentController = documentController;
         onRefresh();
@@ -102,12 +102,92 @@ public class DocumentFxController {
 
     @FXML
     private void onRegister() {
+        if (editingId != null) {
+            showError("Estás editando la propuesta " + editingId
+                    + ". Pulsa Limpiar formulario para radicar una nueva.");
+            return;
+        }
         try {
             Document document = readNewProposal();
             documentController.registrarDocumento(document);
             refreshTable();
             clearForm();
             showInformation("Propuesta radicada correctamente: " + document.getId());
+        } catch (BusinessException | IllegalStateException exception) {
+            showError(exception.getMessage());
+        }
+    }
+
+    @FXML
+    private void onLoadForEdit() {
+        Document selected = documentTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showError("Selecciona una propuesta en la tabla antes de cargarla.");
+            return;
+        }
+        try {
+            Document proposal = documentController.buscarDocumentoPorId(selected.getId());
+            if (proposal == null) {
+                clearForm();
+                showError("El expediente seleccionado ya no existe. Actualiza la lista.");
+                return;
+            }
+            if (proposal.getStage() != Stage.PROPUESTA || proposal.getStatus() != Status.EN_REVISION) {
+                clearForm();
+                showError("Solo puedes editar o eliminar propuestas que estén en revisión.");
+                return;
+            }
+            loadProposalIntoForm(proposal);
+            statusLabel.setText("Propuesta " + editingId + " cargada para editar.");
+        } catch (BusinessException | IllegalStateException exception) {
+            showError(exception.getMessage());
+        }
+    }
+
+    @FXML
+    private void onUpdate() {
+        if (editingId == null) {
+            showError("Primero selecciona una propuesta y pulsa Cargar para editar.");
+            return;
+        }
+        String id = editingId;
+        if (!confirm("Confirmar actualización",
+                "¿Deseas actualizar la propuesta " + id + "?")) {
+            return;
+        }
+        try {
+            Document proposal = documentController.buscarDocumentoPorId(id);
+            if (proposal == null) {
+                showError("No existe una propuesta con el identificador " + id + ".");
+                return;
+            }
+            applyFormToDocument(proposal);
+            documentController.actualizarDocumento(proposal);
+            refreshTable();
+            clearForm();
+            selectInTable(id);
+            showInformation("Propuesta actualizada correctamente: " + id);
+        } catch (BusinessException | IllegalStateException exception) {
+            showError(exception.getMessage());
+        }
+    }
+
+    @FXML
+    private void onDelete() {
+        if (editingId == null) {
+            showError("Primero selecciona una propuesta y pulsa Cargar para editar.");
+            return;
+        }
+        String id = editingId;
+        if (!confirm("Confirmar eliminación",
+                "¿Deseas eliminar la propuesta " + id + "?\nEsta acción no se puede deshacer.")) {
+            return;
+        }
+        try {
+            documentController.eliminarDocumento(id);
+            clearForm();
+            onRefresh();
+            showInformation("Propuesta eliminada correctamente: " + id);
         } catch (BusinessException | IllegalStateException exception) {
             showError(exception.getMessage());
         }
@@ -124,16 +204,7 @@ public class DocumentFxController {
                 return;
             }
             refreshTable();
-            boolean foundInTable = false;
-            for (Document item : documentTable.getItems()) {
-                if (document.getId().equals(item.getId())) {
-                    documentTable.getSelectionModel().select(item);
-                    documentTable.scrollTo(item);
-                    foundInTable = true;
-                    break;
-                }
-            }
-            if (!foundInTable) {
+            if (!selectInTable(document.getId())) {
                 showDetails(document);
             }
             statusLabel.setText("Expediente encontrado: " + document.getId());
@@ -147,6 +218,7 @@ public class DocumentFxController {
         try {
             refreshTable();
             documentTable.getSelectionModel().clearSelection();
+            clearForm();
             searchIdField.clear();
             detailsArea.setText("Selecciona un expediente para consultar sus datos.");
         } catch (BusinessException | IllegalStateException exception) {
@@ -166,33 +238,81 @@ public class DocumentFxController {
     }
 
     private Document readNewProposal() {
-        List<String> studentCodes = new ArrayList<>();
-        studentCodes.add(student1Field.getText().trim());
-        if (!student2Field.getText().trim().isEmpty()) {
-            studentCodes.add(student2Field.getText().trim());
-        }
-
         Document document = new Document(
                 idField.getText().trim(),
                 titleField.getText().trim(),
                 modalityCombo.getValue(),
-                studentCodes,
+                readStudentCodes(),
                 directorField.getText().trim(),
                 filingDatePicker.getValue());
-
-        String codirectorId = codirectorField.getText().trim();
-        if (!codirectorId.isEmpty()) {
-            document.setCodirectorId(codirectorId);
-        }
-        String companyName = companyField.getText().trim();
-        if (!companyName.isEmpty()) {
-            document.setCompany(new Company(companyName, "", "", ""));
-        }
-        String observations = observationsField.getText().trim();
-        if (!observations.isEmpty()) {
-            document.setObservations(observations);
-        }
+        applyOptionalFields(document);
         return document;
+    }
+
+    private List<String> readStudentCodes() {
+        List<String> codes = new ArrayList<>();
+        codes.add(student1Field.getText().trim());
+        if (!student2Field.getText().trim().isEmpty()) {
+            codes.add(student2Field.getText().trim());
+        }
+        return codes;
+    }
+
+    private void applyFormToDocument(Document document) {
+        document.setTitle(titleField.getText().trim());
+        document.setModality(modalityCombo.getValue());
+        document.setStudentIds(readStudentCodes());
+        document.setDirectorId(directorField.getText().trim());
+        document.setFilingDate(filingDatePicker.getValue());
+        applyOptionalFields(document);
+    }
+
+    private void applyOptionalFields(Document document) {
+        String codirectorId = codirectorField.getText().trim();
+        document.setCodirectorId(codirectorId.isEmpty() ? null : codirectorId);
+
+        String observations = observationsField.getText().trim();
+        document.setObservations(observations.isEmpty() ? null : observations);
+
+        String companyName = companyField.getText().trim();
+        Company previousCompany = document.getCompany();
+        if (companyName.isEmpty()) {
+            document.setCompany(null);
+        } else if (previousCompany == null) {
+            document.setCompany(new Company(companyName, "", "", ""));
+        } else {
+            document.setCompany(new Company(companyName,
+                    previousCompany.getContactName(),
+                    previousCompany.getContactEmail(),
+                    previousCompany.getContactPhone()));
+        }
+    }
+
+    private void loadProposalIntoForm(Document proposal) {
+        editingId = proposal.getId();
+        idField.setText(proposal.getId());
+        idField.setEditable(false);
+        titleField.setText(safe(proposal.getTitle()));
+        modalityCombo.getSelectionModel().select(proposal.getModality());
+        filingDatePicker.setValue(proposal.getFilingDate());
+
+        List<String> codes = proposal.getStudentIds();
+        student1Field.setText(codes != null && !codes.isEmpty() ? safe(codes.get(0)) : "");
+        student2Field.setText(codes != null && codes.size() > 1 ? safe(codes.get(1)) : "");
+        directorField.setText(safe(proposal.getDirectorId()));
+        codirectorField.setText(safe(proposal.getCodirectorId()));
+        companyField.setText(proposal.getCompany() == null ? "" : safe(proposal.getCompany().getName()));
+        observationsField.setText(safe(proposal.getObservations()));
+        editModeLabel.setText("Editando propuesta: " + editingId
+                + "  ·  El ID no puede cambiarse");
+    }
+
+    private boolean confirm(String title, String message) {
+        Alert confirmation = new Alert(Alert.AlertType.CONFIRMATION,
+                message, ButtonType.YES, ButtonType.NO);
+        confirmation.setTitle(title);
+        confirmation.setHeaderText(null);
+        return confirmation.showAndWait().orElse(ButtonType.NO) == ButtonType.YES;
     }
 
     private void refreshTable() {
@@ -200,7 +320,20 @@ public class DocumentFxController {
         statusLabel.setText("Expedientes registrados: " + documentTable.getItems().size());
     }
 
+    private boolean selectInTable(String id) {
+        for (Document item : documentTable.getItems()) {
+            if (id.equals(item.getId())) {
+                documentTable.getSelectionModel().select(item);
+                documentTable.scrollTo(item);
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void clearForm() {
+        editingId = null;
+        idField.setEditable(true);
         idField.clear();
         titleField.clear();
         modalityCombo.getSelectionModel().selectFirst();
@@ -211,6 +344,7 @@ public class DocumentFxController {
         codirectorField.clear();
         companyField.clear();
         observationsField.clear();
+        editModeLabel.setText("Modo: radicar una propuesta nueva");
         idField.requestFocus();
     }
 

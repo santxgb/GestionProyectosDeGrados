@@ -44,11 +44,13 @@
                               style="-fx-background-color: WHITE; -fx-background-radius: 8; -fx-border-color: #DCE3EA; -fx-border-radius: 8;">
                             <padding><Insets top="20.0" right="22.0" bottom="20.0" left="22.0" /></padding>
                             <children>
-                                <Label text="Radicar una nueva propuesta" textFill="#143550">
+                                <Label text="Radicar o editar una propuesta" textFill="#143550">
                                     <font><Font name="System Bold" size="18.0" /></font>
                                 </Label>
-                                <Label text="Registra primero los estudiantes y los docentes. La propuesta se creará con estado En revisión."
+                                <Label text="Para radicar, registra primero estudiantes y docentes. Para modificar o eliminar, selecciona una propuesta en revisión en la tabla y pulsa Cargar para editar."
                                        textFill="#526B80" wrapText="true" />
+                                <Label fx:id="editModeLabel" text="Modo: radicar una propuesta nueva"
+                                       style="-fx-font-weight: bold;" textFill="#17617B" />
                                 <GridPane hgap="12.0" vgap="12.0">
                                     <columnConstraints>
                                         <ColumnConstraints minWidth="140.0" prefWidth="160.0" />
@@ -87,13 +89,26 @@
                                                   GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.columnSpan="3" />
                                     </children>
                                 </GridPane>
-                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                <VBox spacing="9.0">
                                     <children>
-                                        <Button text="Radicar propuesta" onAction="#onRegister" mnemonicParsing="false"
-                                                style="-fx-background-color: #F4B321; -fx-font-weight: bold; -fx-text-fill: #143550;" />
-                                        <Button text="Limpiar formulario" onAction="#onClear" mnemonicParsing="false" />
+                                        <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                            <children>
+                                                <Button text="Radicar propuesta" onAction="#onRegister" mnemonicParsing="false"
+                                                        style="-fx-background-color: #F4B321; -fx-font-weight: bold; -fx-text-fill: #143550;" />
+                                                <Button text="Limpiar formulario" onAction="#onClear" mnemonicParsing="false" />
+                                            </children>
+                                        </HBox>
+                                        <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                            <children>
+                                                <Button text="Cargar para editar" onAction="#onLoadForEdit" mnemonicParsing="false" />
+                                                <Button text="Actualizar propuesta" onAction="#onUpdate" mnemonicParsing="false"
+                                                        style="-fx-background-color: #DDEDF4; -fx-text-fill: #143550;" />
+                                                <Button text="Eliminar propuesta" onAction="#onDelete" mnemonicParsing="false"
+                                                        style="-fx-background-color: #F9E1DF; -fx-text-fill: #8B2620;" />
+                                            </children>
+                                        </HBox>
                                     </children>
-                                </HBox>
+                                </VBox>
                             </children>
                         </VBox>
 
@@ -113,7 +128,7 @@
                                         <Button text="Actualizar lista" onAction="#onRefresh" mnemonicParsing="false" />
                                     </children>
                                 </HBox>
-                                <Label text="La tabla muestra propuestas y trabajos de grado. Selecciona una fila para consultar sus detalles; esta sección no modifica registros."
+                                <Label text="La tabla muestra propuestas y trabajos de grado. Seleccionar una fila consulta su detalle; solo las propuestas En revisión pueden cargarse para modificar o eliminar."
                                        textFill="#526B80" wrapText="true" />
                                 <TableView fx:id="documentTable" prefHeight="240.0">
                                     <columns>
