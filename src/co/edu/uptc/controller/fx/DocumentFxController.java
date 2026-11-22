@@ -53,6 +53,10 @@ public class DocumentFxController {
     @FXML private TextArea detailsArea;
     @FXML private Label statusLabel;
     @FXML private Label editModeLabel;
+    @FXML private Label decisionSelectedLabel;
+    @FXML private ComboBox<Status> decisionCombo;
+    @FXML private DatePicker decisionDatePicker;
+    @FXML private TextField decisionActField;
     @FXML private Button closeButton;
 
     private DocumentController documentController;
@@ -76,6 +80,23 @@ public class DocumentFxController {
         modalityCombo.getSelectionModel().selectFirst();
         filingDatePicker.setValue(LocalDate.now());
 
+        decisionCombo.getItems().setAll(Arrays.asList(
+                Status.APROBADO,
+                Status.APROBADO_CON_MODIFICACIONES,
+                Status.NO_APROBADO));
+        decisionCombo.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(Status status) {
+                return status == null ? "" : status.getDisplayName();
+            }
+
+            @Override
+            public Status fromString(String text) {
+                return null; // ComboBox no editable.
+            }
+        });
+        decisionDatePicker.setValue(LocalDate.now());
+
         idColumn.setCellValueFactory(cell -> new ReadOnlyStringWrapper(safe(cell.getValue().getId())));
         titleColumn.setCellValueFactory(cell -> new ReadOnlyStringWrapper(safe(cell.getValue().getTitle())));
         modalityColumn.setCellValueFactory(cell -> new ReadOnlyStringWrapper(
@@ -92,6 +113,8 @@ public class DocumentFxController {
                     if (selected != null) {
                         showDetails(selected);
                     }
+                    clearDecisionInputs();
+                    updateDecisionSelectedLabel(selected);
                 });
     }
 
@@ -194,6 +217,84 @@ public class DocumentFxController {
     }
 
     @FXML
+    private void onRegisterDecision() {
+        Document selected = documentTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showError("Selecciona una propuesta en revisión en la tabla.");
+            return;
+        }
+        if (decisionCombo.getValue() == null) {
+            showError("Selecciona la decisión del Comité Curricular.");
+            return;
+        }
+
+        try {
+            Document document = documentController.buscarDocumentoPorId(selected.getId());
+            if (document == null) {
+                showError("El expediente ya no existe. Actualiza la lista.");
+                return;
+            }
+            if (document.getStage() != Stage.PROPUESTA
+                    || document.getStatus() != Status.EN_REVISION) {
+                showError("Este expediente ya tiene una decisión o no está en revisión.");
+                return;
+            }
+
+            Status decision = decisionCombo.getValue();
+            LocalDate date = decisionDatePicker.getValue();
+            String act = decisionActField.getText().trim();
+            String title = "Confirmar decisión del Comité";
+            String message = "Expediente: " + document.getId()
+                    + "\nDecisión: " + decision.getDisplayName()
+                    + "\nFecha: " + (date == null ? "Sin seleccionar" : date)
+                    + "\nActa: " + (act.isEmpty() ? "Sin registrar" : act)
+                    + "\n\nEsta decisión no se puede editar o eliminar como borrador."
+                    + "\n¿Deseas registrarla?";
+            if (!confirm(title, message)) {
+                return;
+            }
+            documentController.registrarDecisionDocumento(document.getId(), decision, date, act);
+            if (document.getId().equals(editingId)) {
+                clearForm();
+            }
+            refreshTable();
+            selectInTable(document.getId());
+            String result = decision == Status.NO_APROBADO
+                    ? "La propuesta queda no aprobada; no se crea un trabajo de grado."
+                    : "El trabajo de grado se creó automáticamente desde la fecha de aprobación.";
+            showInformation("Decisión registrada para " + document.getId() + ".\n" + result);
+        } catch (BusinessException | IllegalStateException exception) {
+            showError(exception.getMessage());
+        }
+    }
+
+    @FXML
+    private void onClearDecision() {
+        clearDecisionInputs();
+        statusLabel.setText("Campos de decisión limpios.");
+    }
+
+    private void clearDecisionInputs() {
+        decisionCombo.getSelectionModel().clearSelection();
+        decisionDatePicker.setValue(LocalDate.now());
+        decisionActField.clear();
+    }
+
+    private void updateDecisionSelectedLabel(Document selected) {
+        if (selected == null) {
+            decisionSelectedLabel.setText("Ningún expediente seleccionado.");
+        } else if (selected.getStage() == Stage.PROPUESTA
+                && selected.getStatus() == Status.EN_REVISION) {
+            decisionSelectedLabel.setText("Propuesta: " + selected.getId()
+                    + " — " + safe(selected.getTitle())
+                    + "\nFecha límite de decisión: " + selected.getReviewDueDate());
+        } else {
+            decisionSelectedLabel.setText("Expediente: " + selected.getId()
+                    + " — Ya tiene decisión registrada o no está en revisión.");
+        }
+    }
+
+    @FXML
     private void onSearch() {
         try {
             Document document = documentController.buscarDocumentoPorId(searchIdField.getText().trim());
@@ -219,6 +320,8 @@ public class DocumentFxController {
             refreshTable();
             documentTable.getSelectionModel().clearSelection();
             clearForm();
+            clearDecisionInputs();
+            updateDecisionSelectedLabel(null);
             searchIdField.clear();
             detailsArea.setText("Selecciona un expediente para consultar sus datos.");
         } catch (BusinessException | IllegalStateException exception) {

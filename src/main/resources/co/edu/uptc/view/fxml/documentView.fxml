@@ -28,7 +28,7 @@
                 <Label text="Propuestas y expedientes" textFill="WHITE">
                     <font><Font name="System Bold" size="24.0" /></font>
                 </Label>
-                <Label text="Radicación de propuestas · Consulta de expedientes de grado"
+                <Label text="Radicación, consulta y decisiones del Comité Curricular"
                        textFill="#DCE8F1" wrapText="true" />
             </children>
         </VBox>
@@ -145,6 +145,47 @@
                                 </Label>
                                 <TextArea fx:id="detailsArea" editable="false" wrapText="true" prefRowCount="9"
                                           text="Selecciona un expediente para consultar sus datos." />
+                            </children>
+                        </VBox>
+
+                        <!-- Formulario de decisiones: reutiliza DocumentController.registrarDecisionDocumento. -->
+                        <VBox spacing="13.0"
+                              style="-fx-background-color: WHITE; -fx-background-radius: 8; -fx-border-color: #DCE3EA; -fx-border-radius: 8;">
+                            <padding><Insets top="20.0" right="22.0" bottom="20.0" left="22.0" /></padding>
+                            <children>
+                                <Label text="Decisión del Comité Curricular" textFill="#143550">
+                                    <font><Font name="System Bold" size="18.0" /></font>
+                                </Label>
+                                <Label text="Selecciona una propuesta En revisión en la tabla anterior. Una aprobación genera automáticamente el trabajo de grado; la decisión no se puede deshacer desde esta pantalla."
+                                       textFill="#526B80" wrapText="true" />
+                                <Label fx:id="decisionSelectedLabel" text="Ningún expediente seleccionado."
+                                       style="-fx-font-weight: bold;" textFill="#17617B" wrapText="true" />
+                                <GridPane hgap="12.0" vgap="12.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints minWidth="145.0" prefWidth="165.0" />
+                                        <ColumnConstraints minWidth="240.0" hgrow="ALWAYS" />
+                                        <ColumnConstraints minWidth="115.0" prefWidth="130.0" />
+                                        <ColumnConstraints minWidth="200.0" hgrow="ALWAYS" />
+                                    </columnConstraints>
+                                    <children>
+                                        <Label text="Decisión" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                                        <ComboBox fx:id="decisionCombo" promptText="Selecciona una decisión"
+                                                  maxWidth="Infinity" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                                        <Label text="Fecha de decisión" GridPane.rowIndex="0" GridPane.columnIndex="2" />
+                                        <DatePicker fx:id="decisionDatePicker" maxWidth="Infinity"
+                                                    GridPane.rowIndex="0" GridPane.columnIndex="3" />
+                                        <Label text="Acta del Comité" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                                        <TextField fx:id="decisionActField" promptText="Ej. Acta 018-2026"
+                                                   GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+                                    </children>
+                                </GridPane>
+                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Button text="Registrar decisión" onAction="#onRegisterDecision" mnemonicParsing="false"
+                                                style="-fx-background-color: #F4B321; -fx-font-weight: bold; -fx-text-fill: #143550;" />
+                                        <Button text="Limpiar decisión" onAction="#onClearDecision" mnemonicParsing="false" />
+                                    </children>
+                                </HBox>
                             </children>
                         </VBox>
                     </children>
