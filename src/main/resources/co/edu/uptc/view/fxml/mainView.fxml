@@ -55,6 +55,9 @@
                                textFill="#46596B" wrapText="true" />
                         <HBox spacing="12.0" alignment="CENTER_LEFT">
                             <children>
+                                <Button text="Gestionar estudiantes (JavaFX)" onAction="#onOpenStudents"
+                                        mnemonicParsing="false" prefHeight="40.0"
+                                        style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
                                 <Button fx:id="openSwingButton" text="Abrir sistema Swing"
                                         onAction="#onOpenSwing" mnemonicParsing="false"
                                         style="-fx-background-color: #F4B321; -fx-text-fill: #17364D; -fx-font-weight: bold; -fx-background-radius: 6;"
@@ -67,7 +70,7 @@
                                textFill="#4A6070" wrapText="true" />
                     </children>
                 </VBox>
-                <Label text="Próxima etapa: migración del módulo de estudiantes a un formulario FXML."
+                <Label text="Estudiantes: disponible en JavaFX. Próxima etapa: migración de docentes."
                        textFill="#516273" wrapText="true" />
             </children>
         </VBox>
@@ -78,7 +81,7 @@
                 <Insets top="12.0" right="36.0" bottom="12.0" left="36.0" />
             </padding>
             <children>
-                <Label text="Interfaz JavaFX · Primera entrega" textFill="#526B80" />
+                <Label text="Interfaz JavaFX · Gestión de estudiantes" textFill="#526B80" />
                 <Button text="Cerrar JavaFX" onAction="#onCloseJavaFx" mnemonicParsing="false" />
             </children>
         </HBox>

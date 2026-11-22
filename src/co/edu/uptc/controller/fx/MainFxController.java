@@ -1,9 +1,16 @@
 package co.edu.uptc.controller.fx;
 
 import co.edu.uptc.main.Main;
+import co.edu.uptc.controller.StudentController;
+import co.edu.uptc.service.StudentService;
 import co.edu.uptc.view.MainView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import java.io.IOException;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 
@@ -16,6 +23,7 @@ public class MainFxController {
     private Label statusLabel;
 
     private MainView swingWindow;
+    private Stage studentWindow;
 
     @FXML
     private void onOpenSwing() {
@@ -34,6 +42,40 @@ public class MainFxController {
                         "No se pudo abrir Swing: " + exception.getMessage()));
             }
         });
+    }
+
+
+    @FXML
+    private void onOpenStudents() {
+        if (studentWindow != null && studentWindow.isShowing()) {
+            studentWindow.toFront();
+            studentWindow.requestFocus();
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/co/edu/uptc/view/fxml/studentView.fxml"));
+            Parent root = loader.load();
+            StudentFxController fxController = loader.getController();
+            fxController.setStudentController(new StudentController(new StudentService()));
+
+            Stage stage = new Stage();
+            stage.setTitle("SisTG UPTC - Gestión de estudiantes");
+            stage.setScene(new Scene(root));
+            stage.setMinWidth(850);
+            stage.setMinHeight(630);
+            stage.setOnHidden(event -> studentWindow = null);
+            studentWindow = stage;
+            stage.show();
+            statusLabel.setText("Módulo de estudiantes JavaFX abierto.");
+        } catch (IOException | RuntimeException exception) {
+            statusLabel.setText("No se pudo abrir el módulo de estudiantes.");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error al abrir estudiantes");
+            alert.setHeaderText("No se pudo cargar la ventana JavaFX");
+            alert.setContentText(exception.getMessage());
+            alert.showAndWait();
+        }
     }
 
     @FXML
