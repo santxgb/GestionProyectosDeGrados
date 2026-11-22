@@ -48,29 +48,40 @@
                         <Insets top="25.0" right="25.0" bottom="25.0" left="25.0" />
                     </padding>
                     <children>
-                        <Label text="Acceder al sistema actual" textFill="#143550">
+                        <Label text="Módulos disponibles" textFill="#143550">
                             <font><Font name="System Bold" size="18.0" /></font>
                         </Label>
-                        <Label text="Continúa gestionando estudiantes, docentes, propuestas, trabajos de grado y alertas en las ventanas Swing existentes."
+                        <Label text="Gestiona estudiantes y docentes con JavaFX. Los demás módulos continúan disponibles en el sistema Swing mientras avanzamos por etapas."
                                textFill="#46596B" wrapText="true" />
-                        <HBox spacing="12.0" alignment="CENTER_LEFT">
+                        <VBox spacing="10.0">
                             <children>
-                                <Button text="Gestionar estudiantes (JavaFX)" onAction="#onOpenStudents"
-                                        mnemonicParsing="false" prefHeight="40.0"
-                                        style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
-                                <Button fx:id="openSwingButton" text="Abrir sistema Swing"
-                                        onAction="#onOpenSwing" mnemonicParsing="false"
-                                        style="-fx-background-color: #F4B321; -fx-text-fill: #17364D; -fx-font-weight: bold; -fx-background-radius: 6;"
-                                        prefHeight="40.0" />
-                                <Button text="Acerca de SisTG" onAction="#onAbout"
-                                        mnemonicParsing="false" prefHeight="40.0" />
+                                <HBox spacing="12.0" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Button text="Gestionar estudiantes (JavaFX)" onAction="#onOpenStudents"
+                                                mnemonicParsing="false" prefHeight="40.0"
+                                                style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
+                                        <Button text="Gestionar docentes (JavaFX)" onAction="#onOpenTeachers"
+                                                mnemonicParsing="false" prefHeight="40.0"
+                                                style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
+                                    </children>
+                                </HBox>
+                                <HBox spacing="12.0" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Button fx:id="openSwingButton" text="Abrir sistema Swing"
+                                                onAction="#onOpenSwing" mnemonicParsing="false"
+                                                style="-fx-background-color: #F4B321; -fx-text-fill: #17364D; -fx-font-weight: bold; -fx-background-radius: 6;"
+                                                prefHeight="40.0" />
+                                        <Button text="Acerca de SisTG" onAction="#onAbout"
+                                                mnemonicParsing="false" prefHeight="40.0" />
+                                    </children>
+                                </HBox>
                             </children>
-                        </HBox>
+                        </VBox>
                         <Label fx:id="statusLabel" text="JavaFX listo. Tus registros JSON no se modifican al abrir esta pantalla."
                                textFill="#4A6070" wrapText="true" />
                     </children>
                 </VBox>
-                <Label text="Estudiantes: disponible en JavaFX. Próxima etapa: migración de docentes."
+                <Label text="Estudiantes y docentes: disponibles en JavaFX. Próxima etapa: propuestas."
                        textFill="#516273" wrapText="true" />
             </children>
         </VBox>
@@ -81,7 +92,7 @@
                 <Insets top="12.0" right="36.0" bottom="12.0" left="36.0" />
             </padding>
             <children>
-                <Label text="Interfaz JavaFX · Gestión de estudiantes" textFill="#526B80" />
+                <Label text="Interfaz JavaFX · Gestión de estudiantes y docentes" textFill="#526B80" />
                 <Button text="Cerrar JavaFX" onAction="#onCloseJavaFx" mnemonicParsing="false" />
             </children>
         </HBox>

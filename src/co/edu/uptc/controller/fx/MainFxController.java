@@ -2,7 +2,9 @@ package co.edu.uptc.controller.fx;
 
 import co.edu.uptc.main.Main;
 import co.edu.uptc.controller.StudentController;
+import co.edu.uptc.controller.TeacherController;
 import co.edu.uptc.service.StudentService;
+import co.edu.uptc.service.TeacherService;
 import co.edu.uptc.view.MainView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -24,6 +26,7 @@ public class MainFxController {
 
     private MainView swingWindow;
     private Stage studentWindow;
+    private Stage teacherWindow;
 
     @FXML
     private void onOpenSwing() {
@@ -72,6 +75,39 @@ public class MainFxController {
             statusLabel.setText("No se pudo abrir el módulo de estudiantes.");
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error al abrir estudiantes");
+            alert.setHeaderText("No se pudo cargar la ventana JavaFX");
+            alert.setContentText(exception.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void onOpenTeachers() {
+        if (teacherWindow != null && teacherWindow.isShowing()) {
+            teacherWindow.toFront();
+            teacherWindow.requestFocus();
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/co/edu/uptc/view/fxml/teacherView.fxml"));
+            Parent root = loader.load();
+            TeacherFxController fxController = loader.getController();
+            fxController.setTeacherController(new TeacherController(new TeacherService()));
+
+            Stage stage = new Stage();
+            stage.setTitle("SisTG UPTC - Gestión de docentes");
+            stage.setScene(new Scene(root));
+            stage.setMinWidth(850);
+            stage.setMinHeight(630);
+            stage.setOnHidden(event -> teacherWindow = null);
+            teacherWindow = stage;
+            stage.show();
+            statusLabel.setText("Módulo de docentes JavaFX abierto.");
+        } catch (IOException | RuntimeException exception) {
+            statusLabel.setText("No se pudo abrir el módulo de docentes.");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error al abrir docentes");
             alert.setHeaderText("No se pudo cargar la ventana JavaFX");
             alert.setContentText(exception.getMessage());
             alert.showAndWait();

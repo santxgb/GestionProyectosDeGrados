@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="740.0" prefWidth="1140.0"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uptc.controller.fx.TeacherFxController">
+    <top>
+        <VBox spacing="6.0" style="-fx-background-color: #143550;">
+            <padding><Insets top="22.0" right="28.0" bottom="22.0" left="28.0" /></padding>
+            <children>
+                <Label text="Gestión de docentes" textFill="WHITE">
+                    <font><Font name="System Bold" size="26.0" /></font>
+                </Label>
+                <Label text="Registro, consulta, actualización y eliminación de docentes. Se reutiliza la lógica existente de SisTG."
+                       textFill="#DDE9F2" wrapText="true" />
+            </children>
+        </VBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: #F5F7FA;">
+            <content>
+                <VBox spacing="16.0" style="-fx-background-color: #F5F7FA;">
+                    <padding><Insets top="24.0" right="24.0" bottom="24.0" left="24.0" /></padding>
+                    <children>
+                        <HBox spacing="18.0" alignment="TOP_LEFT">
+                            <children>
+                                <VBox spacing="16.0" prefWidth="365.0" minWidth="310.0"
+                                      style="-fx-background-color: WHITE; -fx-border-color: #DCE3EA; -fx-border-radius: 8; -fx-background-radius: 8;">
+                                    <padding><Insets top="20.0" right="18.0" bottom="20.0" left="18.0" /></padding>
+                                    <children>
+                                        <Label text="Datos del docente" textFill="#143550">
+                                            <font><Font name="System Bold" size="18.0" /></font>
+                                        </Label>
+                                        <GridPane hgap="8.0" vgap="12.0">
+                                            <columnConstraints>
+                                                <ColumnConstraints minWidth="94.0" />
+                                                <ColumnConstraints hgrow="ALWAYS" />
+                                            </columnConstraints>
+                                            <children>
+                                                <Label text="Identificación *" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                                                <TextField fx:id="idField" promptText="Identificación del docente"
+                                                           GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                                                <Label text="Nombres *" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                                                <TextField fx:id="firstNamesField" promptText="Nombres"
+                                                           GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                                                <Label text="Apellidos *" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                                                <TextField fx:id="lastNamesField" promptText="Apellidos"
+                                                           GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                                                <Label text="Correo" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                                                <TextField fx:id="emailField" promptText="Correo electrónico"
+                                                           GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                                                <Label text="Teléfono" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                                                <TextField fx:id="phoneField" promptText="Número de teléfono"
+                                                           GridPane.rowIndex="4" GridPane.columnIndex="1" />
+                                            </children>
+                                        </GridPane>
+                                        <Label text="* Campos obligatorios. La identificación es la clave del docente y no se cambia al actualizar."
+                                               textFill="#526B80" wrapText="true" />
+                                        <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                            <children>
+                                                <Button text="Registrar" onAction="#onRegister" mnemonicParsing="false"
+                                                        style="-fx-background-color: #F4B321; -fx-font-weight: bold; -fx-text-fill: #143550;" />
+                                                <Button text="Buscar" onAction="#onSearch" mnemonicParsing="false" />
+                                                <Button text="Actualizar" onAction="#onUpdate" mnemonicParsing="false" />
+                                            </children>
+                                        </HBox>
+                                        <HBox spacing="8.0" alignment="CENTER_LEFT">
+                                            <children>
+                                                <Button text="Eliminar" onAction="#onDelete" mnemonicParsing="false"
+                                                        style="-fx-text-fill: #A02525;" />
+                                                <Button text="Limpiar" onAction="#onClear" mnemonicParsing="false" />
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                                <VBox spacing="12.0" HBox.hgrow="ALWAYS"
+                                      style="-fx-background-color: WHITE; -fx-border-color: #DCE3EA; -fx-border-radius: 8; -fx-background-radius: 8;">
+                                    <padding><Insets top="20.0" right="18.0" bottom="20.0" left="18.0" /></padding>
+                                    <children>
+                                        <HBox alignment="CENTER_LEFT" spacing="10.0">
+                                            <children>
+                                                <Label text="Docentes registrados" textFill="#143550" HBox.hgrow="ALWAYS">
+                                                    <font><Font name="System Bold" size="18.0" /></font>
+                                                </Label>
+                                                <Button text="Actualizar lista" onAction="#onRefresh" mnemonicParsing="false" />
+                                            </children>
+                                        </HBox>
+                                        <Label text="Selecciona una fila para cargar sus datos en el formulario."
+                                               textFill="#526B80" wrapText="true" />
+                                        <TableView fx:id="teacherTable" prefHeight="460.0" VBox.vgrow="ALWAYS">
+                                            <columns>
+                                                <TableColumn fx:id="idColumn" text="Identificación" prefWidth="117.0" />
+                                                <TableColumn fx:id="lastNamesColumn" text="Apellidos" prefWidth="135.0" />
+                                                <TableColumn fx:id="firstNamesColumn" text="Nombres" prefWidth="135.0" />
+                                                <TableColumn fx:id="emailColumn" text="Correo" prefWidth="170.0" />
+                                                <TableColumn fx:id="phoneColumn" text="Teléfono" prefWidth="107.0" />
+                                            </columns>
+                                        </TableView>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER_LEFT" spacing="12.0" style="-fx-background-color: #E8EDF1;">
+            <padding><Insets top="12.0" right="24.0" bottom="12.0" left="24.0" /></padding>
+            <children>
+                <Label fx:id="statusLabel" text="Cargando docentes..." textFill="#34495E"
+                       wrapText="true" HBox.hgrow="ALWAYS" />
+                <Button fx:id="closeButton" text="Cerrar ventana" onAction="#onClose"
+                        mnemonicParsing="false" />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>
