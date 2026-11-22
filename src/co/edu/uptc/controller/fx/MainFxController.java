@@ -30,6 +30,7 @@ public class MainFxController {
     private Stage studentWindow;
     private Stage teacherWindow;
     private Stage documentWindow;
+    private Stage deadlineBoardWindow;
 
     @FXML
     private void onOpenSwing() {
@@ -144,6 +145,39 @@ public class MainFxController {
             statusLabel.setText("No se pudo abrir el módulo de propuestas.");
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Error al abrir propuestas");
+            alert.setHeaderText("No se pudo cargar la ventana JavaFX");
+            alert.setContentText(exception.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    @FXML
+    private void onOpenDeadlineBoard() {
+        if (deadlineBoardWindow != null && deadlineBoardWindow.isShowing()) {
+            deadlineBoardWindow.toFront();
+            deadlineBoardWindow.requestFocus();
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/co/edu/uptc/view/fxml/deadlineBoardView.fxml"));
+            Parent root = loader.load();
+            DeadlineBoardFxController fxController = loader.getController();
+            fxController.setDocumentController(new DocumentController(new DocumentService()));
+
+            Stage stage = new Stage();
+            stage.setTitle("SisTG UPTC - Tablero de trabajos de grado");
+            stage.setScene(new Scene(root));
+            stage.setMinWidth(1140);
+            stage.setMinHeight(680);
+            stage.setOnHidden(event -> deadlineBoardWindow = null);
+            deadlineBoardWindow = stage;
+            stage.show();
+            statusLabel.setText("Tablero de vencimientos JavaFX abierto.");
+        } catch (IOException | RuntimeException exception) {
+            statusLabel.setText("No se pudo abrir el tablero de trabajos.");
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error al abrir tablero");
             alert.setHeaderText("No se pudo cargar la ventana JavaFX");
             alert.setContentText(exception.getMessage());
             alert.showAndWait();
