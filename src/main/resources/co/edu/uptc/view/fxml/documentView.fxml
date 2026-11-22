@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefWidth="1160.0" prefHeight="860.0"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uptc.controller.fx.DocumentFxController">
+    <top>
+        <VBox spacing="6.0" style="-fx-background-color: #143550;">
+            <padding><Insets top="20.0" right="28.0" bottom="20.0" left="28.0" /></padding>
+            <children>
+                <Label text="Propuestas y expedientes" textFill="WHITE">
+                    <font><Font name="System Bold" size="24.0" /></font>
+                </Label>
+                <Label text="Radicación de propuestas · Consulta de expedientes de grado"
+                       textFill="#DCE8F1" wrapText="true" />
+            </children>
+        </VBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
+                    style="-fx-background-color: #F5F7FA;">
+            <content>
+                <VBox spacing="18.0" style="-fx-background-color: #F5F7FA;">
+                    <padding><Insets top="22.0" right="26.0" bottom="22.0" left="26.0" /></padding>
+                    <children>
+                        <VBox spacing="14.0"
+                              style="-fx-background-color: WHITE; -fx-background-radius: 8; -fx-border-color: #DCE3EA; -fx-border-radius: 8;">
+                            <padding><Insets top="20.0" right="22.0" bottom="20.0" left="22.0" /></padding>
+                            <children>
+                                <Label text="Radicar una nueva propuesta" textFill="#143550">
+                                    <font><Font name="System Bold" size="18.0" /></font>
+                                </Label>
+                                <Label text="Registra primero los estudiantes y los docentes. La propuesta se creará con estado En revisión."
+                                       textFill="#526B80" wrapText="true" />
+                                <GridPane hgap="12.0" vgap="12.0">
+                                    <columnConstraints>
+                                        <ColumnConstraints minWidth="140.0" prefWidth="160.0" />
+                                        <ColumnConstraints minWidth="210.0" hgrow="ALWAYS" />
+                                        <ColumnConstraints minWidth="145.0" prefWidth="170.0" />
+                                        <ColumnConstraints minWidth="210.0" hgrow="ALWAYS" />
+                                    </columnConstraints>
+                                    <children>
+                                        <Label text="ID del expediente" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+                                        <TextField fx:id="idField" promptText="Ej. P-2026-001" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+                                        <Label text="Título" GridPane.rowIndex="0" GridPane.columnIndex="2" />
+                                        <TextField fx:id="titleField" promptText="Título de la propuesta" GridPane.rowIndex="0" GridPane.columnIndex="3" />
+
+                                        <Label text="Modalidad" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+                                        <ComboBox fx:id="modalityCombo" maxWidth="Infinity" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+                                        <Label text="Fecha de radicación" GridPane.rowIndex="1" GridPane.columnIndex="2" />
+                                        <DatePicker fx:id="filingDatePicker" maxWidth="Infinity" GridPane.rowIndex="1" GridPane.columnIndex="3" />
+
+                                        <Label text="Estudiante 1 (código)" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+                                        <TextField fx:id="student1Field" promptText="Obligatorio" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                                        <Label text="Estudiante 2 (código)" GridPane.rowIndex="2" GridPane.columnIndex="2" />
+                                        <TextField fx:id="student2Field" promptText="Opcional" GridPane.rowIndex="2" GridPane.columnIndex="3" />
+
+                                        <Label text="Director (ID)" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+                                        <TextField fx:id="directorField" promptText="Identificación del docente" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+                                        <Label text="Codirector (ID)" GridPane.rowIndex="3" GridPane.columnIndex="2" />
+                                        <TextField fx:id="codirectorField" promptText="Opcional" GridPane.rowIndex="3" GridPane.columnIndex="3" />
+
+                                        <Label text="Empresa / entidad" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+                                        <TextField fx:id="companyField" promptText="Solo para práctica empresarial o social; opcional"
+                                                   GridPane.rowIndex="4" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+
+                                        <Label text="Observaciones iniciales" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+                                        <TextArea fx:id="observationsField" promptText="Observaciones de la propuesta (opcional)"
+                                                  prefRowCount="2" wrapText="true"
+                                                  GridPane.rowIndex="5" GridPane.columnIndex="1" GridPane.columnSpan="3" />
+                                    </children>
+                                </GridPane>
+                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Button text="Radicar propuesta" onAction="#onRegister" mnemonicParsing="false"
+                                                style="-fx-background-color: #F4B321; -fx-font-weight: bold; -fx-text-fill: #143550;" />
+                                        <Button text="Limpiar formulario" onAction="#onClear" mnemonicParsing="false" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+
+                        <VBox spacing="12.0"
+                              style="-fx-background-color: WHITE; -fx-background-radius: 8; -fx-border-color: #DCE3EA; -fx-border-radius: 8;">
+                            <padding><Insets top="20.0" right="22.0" bottom="20.0" left="22.0" /></padding>
+                            <children>
+                                <Label text="Consultar expedientes" textFill="#143550">
+                                    <font><Font name="System Bold" size="18.0" /></font>
+                                </Label>
+                                <HBox spacing="10.0" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label text="ID del expediente" />
+                                        <TextField fx:id="searchIdField" promptText="Buscar por identificador"
+                                                   prefWidth="260.0" onAction="#onSearch" />
+                                        <Button text="Buscar" onAction="#onSearch" mnemonicParsing="false" />
+                                        <Button text="Actualizar lista" onAction="#onRefresh" mnemonicParsing="false" />
+                                    </children>
+                                </HBox>
+                                <Label text="La tabla muestra propuestas y trabajos de grado. Selecciona una fila para consultar sus detalles; esta sección no modifica registros."
+                                       textFill="#526B80" wrapText="true" />
+                                <TableView fx:id="documentTable" prefHeight="240.0">
+                                    <columns>
+                                        <TableColumn fx:id="idColumn" text="ID" prefWidth="120.0" />
+                                        <TableColumn fx:id="titleColumn" text="Título" prefWidth="280.0" />
+                                        <TableColumn fx:id="modalityColumn" text="Modalidad" prefWidth="230.0" />
+                                        <TableColumn fx:id="stageColumn" text="Etapa" prefWidth="115.0" />
+                                        <TableColumn fx:id="statusColumn" text="Estado" prefWidth="166.0" />
+                                        <TableColumn fx:id="filingDateColumn" text="Radicación" prefWidth="105.0" />
+                                    </columns>
+                                </TableView>
+                                <Label text="Detalle del expediente seleccionado" textFill="#143550">
+                                    <font><Font name="System Bold" size="15.0" /></font>
+                                </Label>
+                                <TextArea fx:id="detailsArea" editable="false" wrapText="true" prefRowCount="9"
+                                          text="Selecciona un expediente para consultar sus datos." />
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+    <bottom>
+        <HBox alignment="CENTER_LEFT" spacing="12.0" style="-fx-background-color: #E8EDF1;">
+            <padding><Insets top="12.0" right="26.0" bottom="12.0" left="26.0" /></padding>
+            <children>
+                <Label fx:id="statusLabel" text="Cargando expedientes..." textFill="#34495E"
+                       wrapText="true" HBox.hgrow="ALWAYS" />
+                <Button fx:id="closeButton" text="Cerrar ventana" onAction="#onClose" mnemonicParsing="false" />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

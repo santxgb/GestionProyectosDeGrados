@@ -51,7 +51,7 @@
                         <Label text="Módulos disponibles" textFill="#143550">
                             <font><Font name="System Bold" size="18.0" /></font>
                         </Label>
-                        <Label text="Gestiona estudiantes y docentes con JavaFX. Los demás módulos continúan disponibles en el sistema Swing mientras avanzamos por etapas."
+                        <Label text="Gestiona estudiantes, docentes y la radicación y consulta de propuestas con JavaFX. Las demás operaciones continúan disponibles en Swing durante la migración."
                                textFill="#46596B" wrapText="true" />
                         <VBox spacing="10.0">
                             <children>
@@ -61,6 +61,13 @@
                                                 mnemonicParsing="false" prefHeight="40.0"
                                                 style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
                                         <Button text="Gestionar docentes (JavaFX)" onAction="#onOpenTeachers"
+                                                mnemonicParsing="false" prefHeight="40.0"
+                                                style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
+                                    </children>
+                                </HBox>
+                                <HBox spacing="12.0" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Button text="Radicar / consultar propuestas (JavaFX)" onAction="#onOpenDocuments"
                                                 mnemonicParsing="false" prefHeight="40.0"
                                                 style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
                                     </children>
@@ -81,7 +88,7 @@
                                textFill="#4A6070" wrapText="true" />
                     </children>
                 </VBox>
-                <Label text="Estudiantes y docentes: disponibles en JavaFX. Próxima etapa: propuestas."
+                <Label text="Estudiantes y docentes disponibles en JavaFX. Propuestas: radicación y consulta; otras operaciones aún en Swing."
                        textFill="#516273" wrapText="true" />
             </children>
         </VBox>
@@ -92,7 +99,7 @@
                 <Insets top="12.0" right="36.0" bottom="12.0" left="36.0" />
             </padding>
             <children>
-                <Label text="Interfaz JavaFX · Gestión de estudiantes y docentes" textFill="#526B80" />
+                <Label text="Interfaz JavaFX · Estudiantes, docentes y propuestas" textFill="#526B80" />
                 <Button text="Cerrar JavaFX" onAction="#onCloseJavaFx" mnemonicParsing="false" />
             </children>
         </HBox>
