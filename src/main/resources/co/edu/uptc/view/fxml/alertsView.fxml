@@ -74,6 +74,9 @@
             <children>
                 <Label fx:id="statusLabel" text="Cargando alertas..." textFill="#34495E"
                        wrapText="true" HBox.hgrow="ALWAYS"/>
+                <Button text="Exportar alertas a TXT" onAction="#onExportTxt"
+                        mnemonicParsing="false"
+                        style="-fx-background-color: #F4B321; -fx-font-weight: bold; -fx-text-fill: #143550;"/>
                 <Button fx:id="closeButton" text="Cerrar ventana" onAction="#onClose"
                         mnemonicParsing="false"/>
             </children>
