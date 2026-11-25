@@ -12,13 +12,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.List;
 
-/**
- * Vista JavaFX para consultar las observaciones de la propuesta y actualizar
- * únicamente las observaciones de seguimiento del trabajo de grado.
- */
 public class ObservationsFxController {
 
     @FXML private TableView<Document> workTable;
@@ -194,12 +191,18 @@ public class ObservationsFxController {
         }
     }
 
+    public void onWindowCloseRequest(WindowEvent event) {
+        if (hasUnsavedChanges() && !confirmDiscard()) {
+            event.consume();
+        }
+    }
+
     @FXML
     private void onClose() {
         if (hasUnsavedChanges() && !confirmDiscard()) {
             return;
         }
-        ((Stage) closeButton.getScene().getWindow()).close();
+        ((Stage) closeButton.getScene().getWindow()).hide();
     }
 
     private boolean hasUnsavedChanges() {

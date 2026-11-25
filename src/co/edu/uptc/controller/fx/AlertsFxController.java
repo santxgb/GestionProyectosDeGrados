@@ -19,7 +19,6 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Locale;
 
-/** Controla la consulta de alertas; las reglas permanecen en DocumentService. */
 public class AlertsFxController {
 
     @FXML private TableView<Alert> alertsTable;

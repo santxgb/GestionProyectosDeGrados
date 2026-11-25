@@ -19,10 +19,6 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Controla la vista de asignación y consulta de jurados.
- * Las validaciones de negocio y la persistencia pertenecen a DocumentController y DocumentService.
- */
 public class JuryFxController {
 
     @FXML private TableView<Document> workTable;
@@ -84,7 +80,6 @@ public class JuryFxController {
         clearForm();
     }
 
-    /** Recibe el mismo controlador de negocio que utiliza el módulo Swing. */
     public void setDocumentController(DocumentController controller) {
         this.documentController = controller;
         onRefresh();

@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 
-/** Eventos de teacherView.fxml; todas las reglas se delegan a TeacherController. */
 public class TeacherFxController {
 
     @FXML private TextField idField;
@@ -52,7 +51,6 @@ public class TeacherFxController {
                 });
     }
 
-    /** Se configura desde MainFxController después de cargar el archivo FXML. */
     public void setTeacherController(TeacherController teacherController) {
         this.teacherController = teacherController;
         onRefresh();

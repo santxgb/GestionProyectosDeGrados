@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 
-/** Controla los eventos de studentView.fxml y delega las operaciones en StudentController. */
 public class StudentFxController {
 
     @FXML private TextField codeField;
@@ -53,7 +52,6 @@ public class StudentFxController {
                 });
     }
 
-    /** Inyección del controlador de negocio una vez que FXMLLoader ha cargado el FXML. */
     public void setStudentController(StudentController studentController) {
         this.studentController = studentController;
         onRefresh();

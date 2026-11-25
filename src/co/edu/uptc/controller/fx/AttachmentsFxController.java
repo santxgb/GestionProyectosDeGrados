@@ -15,15 +15,12 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.File;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Muestra los anexos de trabajos aprobados y registra una ruta de archivo
- * mediante el controlador de negocio existente. No copia archivos al proyecto.
- */
 public class AttachmentsFxController {
 
     @FXML private TableView<Document> workTable;
@@ -75,7 +72,6 @@ public class AttachmentsFxController {
         attachmentPathColumn.setCellValueFactory(cell ->
                 new ReadOnlyStringWrapper(safe(cell.getValue().getPath())));
 
-        // El tablero de vencimientos ya llega ordenado desde DocumentService.
         for (TableColumn<Document, ?> column : workTable.getColumns()) {
             column.setSortable(false);
         }
@@ -88,7 +84,6 @@ public class AttachmentsFxController {
         showWork(null);
     }
 
-    /** Recibe el controlador existente; no crea un segundo servicio de anexos. */
     public void setDocumentController(DocumentController controller) {
         this.documentController = controller;
         onRefresh();
@@ -208,7 +203,6 @@ public class AttachmentsFxController {
             showInformation("Selecciona la fecha de carga del anexo.");
             return;
         }
-        // La validación definitiva del anexo pertenece a DocumentService.addAttachment().
         Attachment attachment = new Attachment(
                 nameField.getText().trim(),
                 typeField.getText().trim(),
@@ -243,13 +237,19 @@ public class AttachmentsFxController {
         statusLabel.setText("Formulario limpio; no se modificaron los datos guardados.");
     }
 
+    public void onWindowCloseRequest(WindowEvent event) {
+        if (hasDraft() && !confirmDiscard()) {
+            event.consume();
+        }
+    }
+
     @FXML
     private void onClose() {
         if (hasDraft() && !confirmDiscard()) {
             return;
         }
         Stage stage = (Stage) closeButton.getScene().getWindow();
-        stage.close();
+        stage.hide();
     }
 
     private void clearDraft() {

@@ -278,6 +278,7 @@ public class MainFxController {
             stage.setMinWidth(1020);
             stage.setMinHeight(690);
             stage.setOnHidden(event -> observationsWindow = null);
+            stage.setOnCloseRequest(fxController::onWindowCloseRequest);
             observationsWindow = stage;
             stage.show();
             statusLabel.setText("Observaciones de seguimiento JavaFX abiertas.");
@@ -311,6 +312,7 @@ public class MainFxController {
             stage.setMinWidth(1040);
             stage.setMinHeight(700);
             stage.setOnHidden(event -> attachmentsWindow = null);
+            stage.setOnCloseRequest(fxController::onWindowCloseRequest);
             attachmentsWindow = stage;
             stage.show();
             statusLabel.setText("Módulo de anexos JavaFX abierto.");
@@ -324,7 +326,6 @@ public class MainFxController {
         }
     }
 
-    /** Se llama una vez, después de mostrar la ventana principal JavaFX. */
     public void showStartupAlerts() {
         try {
             List<co.edu.uptc.model.Alert> alerts =
