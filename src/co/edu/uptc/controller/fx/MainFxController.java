@@ -37,6 +37,7 @@ public class MainFxController {
     private Stage alertsWindow;
     private Stage juryWindow;
     private Stage observationsWindow;
+    private Stage attachmentsWindow;
 
     @FXML
     private void onOpenSwing() {
@@ -284,6 +285,39 @@ public class MainFxController {
             statusLabel.setText("No se pudieron abrir las observaciones de seguimiento.");
             Alert dialog = new Alert(Alert.AlertType.ERROR);
             dialog.setTitle("Error al abrir observaciones");
+            dialog.setHeaderText("No se pudo cargar la ventana JavaFX");
+            dialog.setContentText(exception.getMessage());
+            dialog.showAndWait();
+        }
+    }
+
+    @FXML
+    private void onOpenAttachments() {
+        if (attachmentsWindow != null && attachmentsWindow.isShowing()) {
+            attachmentsWindow.toFront();
+            attachmentsWindow.requestFocus();
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/co/edu/uptc/view/fxml/attachmentsView.fxml"));
+            Parent root = loader.load();
+            AttachmentsFxController fxController = loader.getController();
+            fxController.setDocumentController(new DocumentController(new DocumentService()));
+
+            Stage stage = new Stage();
+            stage.setTitle("SisTG UPTC - Gestión de anexos");
+            stage.setScene(new Scene(root));
+            stage.setMinWidth(1040);
+            stage.setMinHeight(700);
+            stage.setOnHidden(event -> attachmentsWindow = null);
+            attachmentsWindow = stage;
+            stage.show();
+            statusLabel.setText("Módulo de anexos JavaFX abierto.");
+        } catch (IOException | RuntimeException exception) {
+            statusLabel.setText("No se pudo abrir el módulo de anexos.");
+            Alert dialog = new Alert(Alert.AlertType.ERROR);
+            dialog.setTitle("Error al abrir anexos");
             dialog.setHeaderText("No se pudo cargar la ventana JavaFX");
             dialog.setContentText(exception.getMessage());
             dialog.showAndWait();
