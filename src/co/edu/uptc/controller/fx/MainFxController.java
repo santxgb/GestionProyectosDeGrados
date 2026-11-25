@@ -16,7 +16,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -31,6 +34,7 @@ public class MainFxController {
     private Stage teacherWindow;
     private Stage documentWindow;
     private Stage deadlineBoardWindow;
+    private Stage alertsWindow;
 
     @FXML
     private void onOpenSwing() {
@@ -181,6 +185,65 @@ public class MainFxController {
             alert.setHeaderText("No se pudo cargar la ventana JavaFX");
             alert.setContentText(exception.getMessage());
             alert.showAndWait();
+        }
+    }
+
+
+    @FXML
+    private void onOpenAlerts() {
+        if (alertsWindow != null && alertsWindow.isShowing()) {
+            alertsWindow.toFront();
+            alertsWindow.requestFocus();
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/co/edu/uptc/view/fxml/alertsView.fxml"));
+            Parent root = loader.load();
+            AlertsFxController fxController = loader.getController();
+            fxController.setDocumentController(new DocumentController(new DocumentService()));
+
+            Stage stage = new Stage();
+            stage.setTitle("SisTG UPTC - Consulta de alertas");
+            stage.setScene(new Scene(root));
+            stage.setMinWidth(890);
+            stage.setMinHeight(610);
+            stage.setOnHidden(event -> alertsWindow = null);
+            alertsWindow = stage;
+            stage.show();
+            statusLabel.setText("Consulta de alertas JavaFX abierta.");
+        } catch (IOException | RuntimeException exception) {
+            statusLabel.setText("No se pudo abrir la consulta de alertas.");
+            Alert dialog = new Alert(Alert.AlertType.ERROR);
+            dialog.setTitle("Error al abrir alertas");
+            dialog.setHeaderText("No se pudo cargar la ventana JavaFX");
+            dialog.setContentText(exception.getMessage());
+            dialog.showAndWait();
+        }
+    }
+
+    /** Se llama una vez, después de mostrar la ventana principal JavaFX. */
+    public void showStartupAlerts() {
+        try {
+            List<co.edu.uptc.model.Alert> alerts =
+                    new DocumentController(new DocumentService()).obtenerAlertas();
+            if (alerts.isEmpty()) {
+                return;
+            }
+            statusLabel.setText("Hay " + alerts.size() + " alerta(s) pendiente(s).");
+            ButtonType viewButton = new ButtonType("Ver alertas", ButtonBar.ButtonData.YES);
+            ButtonType laterButton = new ButtonType("Ahora no", ButtonBar.ButtonData.CANCEL_CLOSE);
+            Alert dialog = new Alert(Alert.AlertType.WARNING);
+            dialog.setTitle("Alertas de SisTG");
+            dialog.setHeaderText("Hay " + alerts.size() + " alerta(s) pendiente(s)");
+            dialog.setContentText("¿Deseas consultar las alertas de propuestas y trabajos de grado?");
+            dialog.getButtonTypes().setAll(viewButton, laterButton);
+            if (dialog.showAndWait().orElse(laterButton) == viewButton) {
+                onOpenAlerts();
+            }
+        } catch (RuntimeException exception) {
+            statusLabel.setText("No se pudieron consultar las alertas al iniciar: "
+                    + exception.getMessage());
         }
     }
 

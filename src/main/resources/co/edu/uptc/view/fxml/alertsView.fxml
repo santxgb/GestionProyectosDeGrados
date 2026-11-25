@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="720.0" prefWidth="1120.0"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uptc.controller.fx.AlertsFxController">
+    <top>
+        <VBox spacing="7.0" style="-fx-background-color: #143550;">
+            <padding><Insets top="22.0" right="28.0" bottom="22.0" left="28.0"/></padding>
+            <children>
+                <Label text="Alertas de propuestas y trabajos de grado" textFill="WHITE">
+                    <font><Font name="System Bold" size="25.0"/></font>
+                </Label>
+                <Label text="Consulta de plazos y fechas límite calculadas por SisTG."
+                       textFill="#DCE8F1" wrapText="true"/>
+            </children>
+        </VBox>
+    </top>
+    <center>
+        <VBox spacing="14.0" style="-fx-background-color: #F5F7FA;">
+            <padding><Insets top="20.0" right="24.0" bottom="20.0" left="24.0"/></padding>
+            <children>
+                <HBox alignment="CENTER_LEFT" spacing="12.0">
+                    <children>
+                        <Label text="Alertas pendientes" textFill="#143550" HBox.hgrow="ALWAYS">
+                            <font><Font name="System Bold" size="19.0"/></font>
+                        </Label>
+                        <Button text="Actualizar alertas" onAction="#onRefresh" mnemonicParsing="false"
+                                style="-fx-background-color: #F4B321; -fx-font-weight: bold; -fx-text-fill: #143550;"/>
+                    </children>
+                </HBox>
+                <Label fx:id="summaryLabel" text="Cargando alertas..." textFill="#526B80"/>
+                <Label text="La fecha límite corresponde al vencimiento del trabajo o a la decisión de la propuesta. Selecciona una alerta para ver su mensaje completo."
+                       textFill="#526B80" wrapText="true"/>
+                <TableView fx:id="alertsTable" prefHeight="340.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="typeColumn" text="Tipo de alerta" prefWidth="250.0"/>
+                        <TableColumn fx:id="documentIdColumn" text="Expediente" prefWidth="120.0"/>
+                        <TableColumn fx:id="referenceDateColumn" text="Fecha límite" prefWidth="125.0"/>
+                        <TableColumn fx:id="messageColumn" text="Mensaje" prefWidth="555.0"/>
+                    </columns>
+                    <placeholder>
+                        <Label text="No hay alertas pendientes para mostrar." textFill="#526B80"/>
+                    </placeholder>
+                </TableView>
+                <VBox spacing="8.0" style="-fx-background-color: WHITE; -fx-border-color: #DCE3EA; -fx-border-radius: 8; -fx-background-radius: 8;">
+                    <padding><Insets top="14.0" right="18.0" bottom="14.0" left="18.0"/></padding>
+                    <children>
+                        <Label text="Detalle de la alerta seleccionada" textFill="#143550">
+                            <font><Font name="System Bold" size="17.0"/></font>
+                        </Label>
+                        <TextArea fx:id="detailsArea" editable="false" wrapText="true"
+                                  prefRowCount="5" prefHeight="130.0"
+                                  promptText="Selecciona una alerta para consultar su información."/>
+                    </children>
+                </VBox>
+            </children>
+        </VBox>
+    </center>
+    <bottom>
+        <HBox spacing="12.0" alignment="CENTER_LEFT" style="-fx-background-color: #E8EDF1;">
+            <padding><Insets top="12.0" right="24.0" bottom="12.0" left="24.0"/></padding>
+            <children>
+                <Label fx:id="statusLabel" text="Cargando alertas..." textFill="#34495E"
+                       wrapText="true" HBox.hgrow="ALWAYS"/>
+                <Button fx:id="closeButton" text="Cerrar ventana" onAction="#onClose"
+                        mnemonicParsing="false"/>
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>
