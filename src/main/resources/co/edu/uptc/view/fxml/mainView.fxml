@@ -39,7 +39,7 @@
                 <Label text="Bienvenido a SisTG" textFill="#143550">
                     <font><Font name="System Bold" size="25.0" /></font>
                 </Label>
-                <Label text="La interfaz JavaFX incorpora los módulos de estudiantes, docentes, propuestas, vencimientos y alertas. Swing permanece disponible durante la migración."
+                <Label text="La interfaz JavaFX incorpora los módulos de estudiantes, docentes, propuestas, vencimientos, alertas y jurados. Swing permanece disponible durante la migración."
                        textFill="#46596B" wrapText="true">
                     <font><Font size="15.0" /></font>
                 </Label>
@@ -80,6 +80,9 @@
                                         <Button text="Consultar alertas (JavaFX)" onAction="#onOpenAlerts"
                                                 mnemonicParsing="false" prefHeight="40.0"
                                                 style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
+                                        <Button text="Asignar / consultar jurados (JavaFX)" onAction="#onOpenJuries"
+                                                mnemonicParsing="false" prefHeight="40.0"
+                                                style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
                                     </children>
                                 </HBox>
                                 <HBox spacing="12.0" alignment="CENTER_LEFT">
@@ -98,7 +101,7 @@
                                textFill="#4A6070" wrapText="true" />
                     </children>
                 </VBox>
-                <Label text="Módulos JavaFX: estudiantes, docentes, propuestas, tablero y alertas. Las demás funciones siguen disponibles en Swing."
+                <Label text="Módulos JavaFX: estudiantes, docentes, propuestas, tablero, alertas y jurados. Las demás funciones siguen disponibles en Swing."
                        textFill="#516273" wrapText="true" />
             </children>
         </VBox>
@@ -109,7 +112,7 @@
                 <Insets top="12.0" right="36.0" bottom="12.0" left="36.0" />
             </padding>
             <children>
-                <Label text="Interfaz JavaFX · Estudiantes, docentes, propuestas, tablero y alertas" textFill="#526B80" />
+                <Label text="Interfaz JavaFX · Estudiantes, docentes, propuestas, tablero, alertas y jurados" textFill="#526B80" />
                 <Button text="Cerrar JavaFX" onAction="#onCloseJavaFx" mnemonicParsing="false" />
             </children>
         </HBox>

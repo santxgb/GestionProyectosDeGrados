@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="850.0" prefWidth="1150.0"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uptc.controller.fx.JuryFxController">
+    <top>
+        <VBox spacing="7.0" style="-fx-background-color: #143550;">
+            <padding><Insets top="21.0" right="28.0" bottom="21.0" left="28.0"/></padding>
+            <children>
+                <Label text="Asignación y consulta de jurados" textFill="WHITE">
+                    <font><Font name="System Bold" size="26.0"/></font>
+                </Label>
+                <Label text="Selecciona un trabajo de grado aprobado, consulta sus jurados y registra su acta de asignación."
+                       textFill="#DCE8F1" wrapText="true"/>
+            </children>
+        </VBox>
+    </top>
+    <center>
+        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: #F5F7FA;">
+            <content>
+                <VBox spacing="17.0" style="-fx-background-color: #F5F7FA;">
+                    <padding><Insets top="20.0" right="24.0" bottom="22.0" left="24.0"/></padding>
+                    <children>
+                        <HBox alignment="CENTER_LEFT" spacing="12.0">
+                            <children>
+                                <Label text="Trabajos de grado aprobados" textFill="#143550" HBox.hgrow="ALWAYS">
+                                    <font><Font name="System Bold" size="18.0"/></font>
+                                </Label>
+                                <Button text="Actualizar lista" onAction="#onRefresh" mnemonicParsing="false"
+                                        style="-fx-background-color: #F4B321; -fx-font-weight: bold; -fx-text-fill: #143550;"/>
+                            </children>
+                        </HBox>
+                        <TableView fx:id="workTable" prefHeight="202.0" minHeight="170.0">
+                            <columns>
+                                <TableColumn fx:id="idColumn" text="ID" prefWidth="130.0"/>
+                                <TableColumn fx:id="titleColumn" text="Título" prefWidth="555.0"/>
+                                <TableColumn fx:id="statusColumn" text="Decisión" prefWidth="235.0"/>
+                                <TableColumn fx:id="juriesColumn" text="Jurados" prefWidth="100.0"/>
+                            </columns>
+                            <placeholder>
+                                <Label text="No hay trabajos aprobados para asignar jurados." textFill="#526B80"/>
+                            </placeholder>
+                        </TableView>
+                        <VBox spacing="7.0" style="-fx-background-color: WHITE; -fx-background-radius: 8; -fx-border-color: #DCE3EA; -fx-border-radius: 8;">
+                            <padding><Insets top="12.0" right="16.0" bottom="12.0" left="16.0"/></padding>
+                            <children>
+                                <Label fx:id="selectedWorkLabel" text="Ningún trabajo de grado seleccionado." textFill="#143550" wrapText="true">
+                                    <font><Font name="System Bold" size="15.0"/></font>
+                                </Label>
+                                <Label fx:id="currentJuriesLabel" text="Selecciona un expediente para consultar sus jurados." textFill="#46596B" wrapText="true"/>
+                            </children>
+                        </VBox>
+                        <VBox spacing="11.0" style="-fx-background-color: WHITE; -fx-background-radius: 8; -fx-border-color: #DCE3EA; -fx-border-radius: 8;">
+                            <padding><Insets top="16.0" right="18.0" bottom="16.0" left="18.0"/></padding>
+                            <children>
+                                <Label text="Datos de la asignación" textFill="#143550">
+                                    <font><Font name="System Bold" size="18.0"/></font>
+                                </Label>
+                                <Label text="El acta es obligatoria. Al guardar se reemplaza la lista completa de jurados del expediente seleccionado."
+                                       textFill="#526B80" wrapText="true"/>
+                                <HBox spacing="12.0" alignment="CENTER_LEFT">
+                                    <children>
+                                        <Label text="Acta de asignación:" minWidth="145.0"/>
+                                        <TextField fx:id="assignmentActField" prefWidth="420.0"
+                                                   promptText="Número o referencia del acta"/>
+                                    </children>
+                                </HBox>
+                                <Label text="Jurado 1" textFill="#143550">
+                                    <font><Font name="System Bold" size="16.0"/></font>
+                                </Label>
+                                <GridPane hgap="12.0" vgap="10.0">
+                                    <children>
+                                        <Label text="Identificación" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                        <TextField fx:id="jury1IdField" prefWidth="255.0" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                        <Label text="Apellidos" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                                        <TextField fx:id="jury1LastNamesField" prefWidth="255.0" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                                        <Label text="Nombres" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                        <TextField fx:id="jury1FirstNamesField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                        <Label text="Correo" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                                        <TextField fx:id="jury1EmailField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                                        <Label text="Teléfono" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                        <TextField fx:id="jury1PhoneField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                        <CheckBox fx:id="jury1ExternalCheck" text="Es externo" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                                        <TextField fx:id="jury1InstitutionField" promptText="Institución (si es externo)"
+                                                   GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                                    </children>
+                                </GridPane>
+                                <CheckBox fx:id="secondJuryCheck" text="Asignar también un segundo jurado"/>
+                                <GridPane fx:id="jury2Pane" hgap="12.0" vgap="10.0">
+                                    <children>
+                                        <Label text="Identificación" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                                        <TextField fx:id="jury2IdField" prefWidth="255.0" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                                        <Label text="Apellidos" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+                                        <TextField fx:id="jury2LastNamesField" prefWidth="255.0" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+                                        <Label text="Nombres" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                                        <TextField fx:id="jury2FirstNamesField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                                        <Label text="Correo" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+                                        <TextField fx:id="jury2EmailField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+                                        <Label text="Teléfono" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                                        <TextField fx:id="jury2PhoneField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                        <CheckBox fx:id="jury2ExternalCheck" text="Es externo" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+                                        <TextField fx:id="jury2InstitutionField" promptText="Institución (si es externo)"
+                                                   GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                                    </children>
+                                </GridPane>
+                                <HBox spacing="12.0" alignment="CENTER_RIGHT">
+                                    <children>
+                                        <Button text="Restablecer datos guardados" onAction="#onRestore" mnemonicParsing="false"/>
+                                        <Button text="Guardar asignación" onAction="#onSave" mnemonicParsing="false"
+                                                style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold;"/>
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+    <bottom>
+        <HBox spacing="12.0" alignment="CENTER_LEFT" style="-fx-background-color: #E8EDF1;">
+            <padding><Insets top="12.0" right="24.0" bottom="12.0" left="24.0"/></padding>
+            <children>
+                <Label fx:id="statusLabel" text="Cargando trabajos aprobados..." wrapText="true"
+                       HBox.hgrow="ALWAYS" textFill="#34495E"/>
+                <Button fx:id="closeButton" text="Cerrar ventana" onAction="#onClose" mnemonicParsing="false"/>
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>

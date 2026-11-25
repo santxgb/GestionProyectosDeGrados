@@ -35,6 +35,7 @@ public class MainFxController {
     private Stage documentWindow;
     private Stage deadlineBoardWindow;
     private Stage alertsWindow;
+    private Stage juryWindow;
 
     @FXML
     private void onOpenSwing() {
@@ -216,6 +217,39 @@ public class MainFxController {
             statusLabel.setText("No se pudo abrir la consulta de alertas.");
             Alert dialog = new Alert(Alert.AlertType.ERROR);
             dialog.setTitle("Error al abrir alertas");
+            dialog.setHeaderText("No se pudo cargar la ventana JavaFX");
+            dialog.setContentText(exception.getMessage());
+            dialog.showAndWait();
+        }
+    }
+
+    @FXML
+    private void onOpenJuries() {
+        if (juryWindow != null && juryWindow.isShowing()) {
+            juryWindow.toFront();
+            juryWindow.requestFocus();
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/co/edu/uptc/view/fxml/juryView.fxml"));
+            Parent root = loader.load();
+            JuryFxController fxController = loader.getController();
+            fxController.setDocumentController(new DocumentController(new DocumentService()));
+
+            Stage stage = new Stage();
+            stage.setTitle("SisTG UPTC - Asignación de jurados");
+            stage.setScene(new Scene(root));
+            stage.setMinWidth(1020);
+            stage.setMinHeight(710);
+            stage.setOnHidden(event -> juryWindow = null);
+            juryWindow = stage;
+            stage.show();
+            statusLabel.setText("Módulo de jurados JavaFX abierto.");
+        } catch (IOException | RuntimeException exception) {
+            statusLabel.setText("No se pudo abrir el módulo de jurados.");
+            Alert dialog = new Alert(Alert.AlertType.ERROR);
+            dialog.setTitle("Error al abrir jurados");
             dialog.setHeaderText("No se pudo cargar la ventana JavaFX");
             dialog.setContentText(exception.getMessage());
             dialog.showAndWait();
