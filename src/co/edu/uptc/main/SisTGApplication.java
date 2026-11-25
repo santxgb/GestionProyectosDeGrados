@@ -1,6 +1,8 @@
 package co.edu.uptc.main;
 
+import co.edu.uptc.controller.fx.MainFxController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -20,5 +22,8 @@ public class SisTGApplication extends Application {
         stage.setMinHeight(540);
         stage.setScene(scene);
         stage.show();
+
+        MainFxController controller = loader.getController();
+        Platform.runLater(controller::showStartupAlerts);
     }
 }
