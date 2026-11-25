@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="740.0" prefWidth="1080.0"
+            xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="co.edu.uptc.controller.fx.ObservationsFxController">
+    <top>
+        <VBox spacing="6.0" style="-fx-background-color: #143550;">
+            <padding>
+                <Insets top="20.0" right="30.0" bottom="20.0" left="30.0" />
+            </padding>
+            <children>
+                <Label text="Observaciones de seguimiento" textFill="WHITE">
+                    <font><Font name="System Bold" size="25.0" /></font>
+                </Label>
+                <Label text="Consulta las observaciones iniciales y actualiza solo el seguimiento de los trabajos aprobados."
+                       textFill="#DDE9F2" wrapText="true" />
+            </children>
+        </VBox>
+    </top>
+    <center>
+        <VBox spacing="12.0" style="-fx-background-color: #F5F7FA;">
+            <padding>
+                <Insets top="20.0" right="30.0" bottom="18.0" left="30.0" />
+            </padding>
+            <children>
+                <Label fx:id="summaryLabel" text="Trabajos aprobados: 0" textFill="#46596B" />
+                <TableView fx:id="workTable" prefHeight="280.0" VBox.vgrow="ALWAYS">
+                    <columns>
+                        <TableColumn fx:id="idColumn" text="ID" prefWidth="125.0" />
+                        <TableColumn fx:id="titleColumn" text="Título del trabajo" prefWidth="460.0" />
+                        <TableColumn fx:id="approvalDateColumn" text="Aprobación" prefWidth="160.0" />
+                        <TableColumn fx:id="deadlineColumn" text="Fecha máxima" prefWidth="160.0" />
+                    </columns>
+                </TableView>
+                <Label fx:id="selectedWorkLabel" text="Selecciona un trabajo de grado aprobado en la tabla."
+                       textFill="#143550" wrapText="true">
+                    <font><Font name="System Bold" size="14.0" /></font>
+                </Label>
+                <HBox spacing="14.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS" prefWidth="490.0">
+                            <children>
+                                <Label text="Observaciones iniciales de la propuesta (solo lectura)"
+                                       textFill="#143550" wrapText="true" />
+                                <TextArea fx:id="proposalObservationsArea" editable="false"
+                                          prefHeight="180.0" wrapText="true" VBox.vgrow="ALWAYS"
+                                          style="-fx-control-inner-background: #EAF0F5;" />
+                            </children>
+                        </VBox>
+                        <VBox spacing="8.0" HBox.hgrow="ALWAYS" prefWidth="490.0">
+                            <children>
+                                <Label text="Observaciones del trabajo de grado (editables)"
+                                       textFill="#143550" wrapText="true" />
+                                <TextArea fx:id="followUpObservationsArea" disable="true"
+                                          prefHeight="180.0" wrapText="true" VBox.vgrow="ALWAYS"
+                                          promptText="Escribe aquí el seguimiento del trabajo de grado..." />
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                <Label text="Guardar modifica únicamente el seguimiento del trabajo. Las observaciones iniciales se conservan."
+                       textFill="#516273" wrapText="true" />
+            </children>
+        </VBox>
+    </center>
+    <bottom>
+        <VBox spacing="10.0" style="-fx-background-color: #E8EDF1;">
+            <padding>
+                <Insets top="12.0" right="30.0" bottom="14.0" left="30.0" />
+            </padding>
+            <children>
+                <HBox spacing="12.0" alignment="CENTER_LEFT">
+                    <children>
+                        <Button text="Actualizar listado" onAction="#onRefresh" mnemonicParsing="false" />
+                        <Button fx:id="restoreButton" text="Restaurar texto guardado"
+                                disable="true" onAction="#onRestore" mnemonicParsing="false" />
+                        <Button fx:id="saveButton" text="Guardar seguimiento"
+                                disable="true" onAction="#onSaveObservations" mnemonicParsing="false"
+                                style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold;" />
+                        <Button fx:id="closeButton" text="Cerrar" onAction="#onClose" mnemonicParsing="false" />
+                    </children>
+                </HBox>
+                <Label fx:id="statusLabel" text="Selecciona un trabajo para consultar sus observaciones."
+                       textFill="#3D5263" wrapText="true" />
+            </children>
+        </VBox>
+    </bottom>
+</BorderPane>

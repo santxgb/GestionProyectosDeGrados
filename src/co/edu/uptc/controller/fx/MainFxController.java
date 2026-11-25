@@ -36,6 +36,7 @@ public class MainFxController {
     private Stage deadlineBoardWindow;
     private Stage alertsWindow;
     private Stage juryWindow;
+    private Stage observationsWindow;
 
     @FXML
     private void onOpenSwing() {
@@ -250,6 +251,39 @@ public class MainFxController {
             statusLabel.setText("No se pudo abrir el módulo de jurados.");
             Alert dialog = new Alert(Alert.AlertType.ERROR);
             dialog.setTitle("Error al abrir jurados");
+            dialog.setHeaderText("No se pudo cargar la ventana JavaFX");
+            dialog.setContentText(exception.getMessage());
+            dialog.showAndWait();
+        }
+    }
+
+    @FXML
+    private void onOpenObservations() {
+        if (observationsWindow != null && observationsWindow.isShowing()) {
+            observationsWindow.toFront();
+            observationsWindow.requestFocus();
+            return;
+        }
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(
+                    "/co/edu/uptc/view/fxml/observationsView.fxml"));
+            Parent root = loader.load();
+            ObservationsFxController fxController = loader.getController();
+            fxController.setDocumentController(new DocumentController(new DocumentService()));
+
+            Stage stage = new Stage();
+            stage.setTitle("SisTG UPTC - Observaciones de seguimiento");
+            stage.setScene(new Scene(root));
+            stage.setMinWidth(1020);
+            stage.setMinHeight(690);
+            stage.setOnHidden(event -> observationsWindow = null);
+            observationsWindow = stage;
+            stage.show();
+            statusLabel.setText("Observaciones de seguimiento JavaFX abiertas.");
+        } catch (IOException | RuntimeException exception) {
+            statusLabel.setText("No se pudieron abrir las observaciones de seguimiento.");
+            Alert dialog = new Alert(Alert.AlertType.ERROR);
+            dialog.setTitle("Error al abrir observaciones");
             dialog.setHeaderText("No se pudo cargar la ventana JavaFX");
             dialog.setContentText(exception.getMessage());
             dialog.showAndWait();

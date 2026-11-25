@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="940.0"
+<BorderPane prefHeight="690.0" prefWidth="940.0"
             xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="co.edu.uptc.controller.fx.MainFxController">
@@ -39,7 +39,7 @@
                 <Label text="Bienvenido a SisTG" textFill="#143550">
                     <font><Font name="System Bold" size="25.0" /></font>
                 </Label>
-                <Label text="La interfaz JavaFX incorpora los módulos de estudiantes, docentes, propuestas, vencimientos, alertas y jurados. Swing permanece disponible durante la migración."
+                <Label text="La interfaz JavaFX incorpora los módulos de estudiantes, docentes, propuestas, vencimientos, alertas, jurados y observaciones. Swing permanece disponible durante la migración."
                        textFill="#46596B" wrapText="true">
                     <font><Font size="15.0" /></font>
                 </Label>
@@ -51,7 +51,7 @@
                         <Label text="Módulos disponibles" textFill="#143550">
                             <font><Font name="System Bold" size="18.0" /></font>
                         </Label>
-                        <Label text="Gestiona estudiantes, docentes, propuestas y el tablero de trabajos aprobados y las alertas. Las operaciones pendientes siguen disponibles en Swing."
+                        <Label text="Gestiona estudiantes, docentes, propuestas, tablero, alertas, jurados y observaciones. Los demás módulos siguen en Swing."
                                textFill="#46596B" wrapText="true" />
                         <VBox spacing="10.0">
                             <children>
@@ -87,6 +87,13 @@
                                 </HBox>
                                 <HBox spacing="12.0" alignment="CENTER_LEFT">
                                     <children>
+                                        <Button text="Observaciones de seguimiento (JavaFX)" onAction="#onOpenObservations"
+                                                mnemonicParsing="false" prefHeight="40.0"
+                                                style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
+                                    </children>
+                                </HBox>
+                                <HBox spacing="12.0" alignment="CENTER_LEFT">
+                                    <children>
                                         <Button fx:id="openSwingButton" text="Abrir sistema Swing"
                                                 onAction="#onOpenSwing" mnemonicParsing="false"
                                                 style="-fx-background-color: #F4B321; -fx-text-fill: #17364D; -fx-font-weight: bold; -fx-background-radius: 6;"
@@ -101,7 +108,7 @@
                                textFill="#4A6070" wrapText="true" />
                     </children>
                 </VBox>
-                <Label text="Módulos JavaFX: estudiantes, docentes, propuestas, tablero, alertas y jurados. Las demás funciones siguen disponibles en Swing."
+                <Label text="Módulos JavaFX: estudiantes, docentes, propuestas, tablero, alertas, jurados y observaciones."
                        textFill="#516273" wrapText="true" />
             </children>
         </VBox>
@@ -112,7 +119,7 @@
                 <Insets top="12.0" right="36.0" bottom="12.0" left="36.0" />
             </padding>
             <children>
-                <Label text="Interfaz JavaFX · Estudiantes, docentes, propuestas, tablero, alertas y jurados" textFill="#526B80" />
+                <Label text="JavaFX · Estudiantes, docentes, propuestas, tablero, alertas, jurados y observaciones" textFill="#526B80" />
                 <Button text="Cerrar JavaFX" onAction="#onCloseJavaFx" mnemonicParsing="false" />
             </children>
         </HBox>
