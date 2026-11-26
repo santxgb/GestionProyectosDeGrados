@@ -1,13 +1,11 @@
 package co.edu.uptc.controller.fx;
 
-import co.edu.uptc.main.Main;
 import co.edu.uptc.controller.DocumentController;
 import co.edu.uptc.controller.StudentController;
 import co.edu.uptc.controller.TeacherController;
 import co.edu.uptc.service.DocumentService;
 import co.edu.uptc.service.StudentService;
 import co.edu.uptc.service.TeacherService;
-import co.edu.uptc.view.MainView;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,15 +19,12 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
 
 public class MainFxController {
 
     @FXML
     private Label statusLabel;
 
-    private MainView swingWindow;
     private Stage studentWindow;
     private Stage teacherWindow;
     private Stage documentWindow;
@@ -38,26 +33,6 @@ public class MainFxController {
     private Stage juryWindow;
     private Stage observationsWindow;
     private Stage attachmentsWindow;
-
-    @FXML
-    private void onOpenSwing() {
-        statusLabel.setText("Abriendo la interfaz existente...");
-        SwingUtilities.invokeLater(() -> {
-            try {
-                if (swingWindow == null || !swingWindow.isDisplayable()) {
-                    swingWindow = Main.createMainView();
-                    swingWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-                }
-                swingWindow.setVisible(true);
-                swingWindow.toFront();
-                Platform.runLater(() -> statusLabel.setText("Interfaz Swing abierta correctamente."));
-            } catch (RuntimeException exception) {
-                Platform.runLater(() -> statusLabel.setText(
-                        "No se pudo abrir Swing: " + exception.getMessage()));
-            }
-        });
-    }
-
 
     @FXML
     private void onOpenStudents() {
@@ -278,6 +253,7 @@ public class MainFxController {
             stage.setMinWidth(1020);
             stage.setMinHeight(690);
             stage.setOnHidden(event -> observationsWindow = null);
+            // La X de la ventana debe respetar los cambios sin guardar.
             stage.setOnCloseRequest(fxController::onWindowCloseRequest);
             observationsWindow = stage;
             stage.show();
@@ -312,6 +288,7 @@ public class MainFxController {
             stage.setMinWidth(1040);
             stage.setMinHeight(700);
             stage.setOnHidden(event -> attachmentsWindow = null);
+            // Evita perder un anexo sin guardar al cerrar con la X.
             stage.setOnCloseRequest(fxController::onWindowCloseRequest);
             attachmentsWindow = stage;
             stage.show();
@@ -326,6 +303,7 @@ public class MainFxController {
         }
     }
 
+    /** Se llama una vez, después de mostrar la ventana principal JavaFX. */
     public void showStartupAlerts() {
         try {
             List<co.edu.uptc.model.Alert> alerts =
@@ -357,7 +335,7 @@ public class MainFxController {
         alert.setHeaderText("SisTG UPTC");
         alert.setContentText("Sistema de seguimiento de propuestas y trabajos de grado.\n"
                 + "Programación II - UPTC, Seccional Sogamoso.\n\n"
-                + "La interfaz se está migrando progresivamente de Swing a JavaFX.");
+                + "La aplicación utiliza JavaFX y conserva la lógica de negocio y la persistencia JSON.");
         alert.showAndWait();
     }
 

@@ -1,6 +1,5 @@
 package co.edu.uptc.main;
 
-import co.edu.uptc.controller.fx.MainFxController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;

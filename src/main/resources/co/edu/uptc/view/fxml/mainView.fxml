@@ -43,7 +43,7 @@
                         <Label text="Bienvenido a SisTG" textFill="#143550">
                             <font><Font name="System Bold" size="25.0" /></font>
                         </Label>
-                        <Label text="La interfaz JavaFX incorpora los módulos de estudiantes, docentes, propuestas, vencimientos, alertas, jurados, observaciones y anexos. Swing permanece disponible durante la migración."
+                        <Label text="Consulta estudiantes, docentes, propuestas y trabajos de grado desde los módulos JavaFX de SisTG."
                                textFill="#46596B" wrapText="true">
                             <font><Font size="15.0" /></font>
                         </Label>
@@ -55,7 +55,7 @@
                                 <Label text="Módulos disponibles" textFill="#143550">
                                     <font><Font name="System Bold" size="18.0" /></font>
                                 </Label>
-                                <Label text="Gestiona estudiantes, docentes, propuestas, tablero, alertas, jurados, observaciones y anexos. La interfaz Swing se conserva temporalmente para comparar funcionalidades."
+                                <Label text="Gestiona estudiantes, docentes, propuestas, tablero, alertas, jurados, observaciones y anexos desde JavaFX."
                                        textFill="#46596B" wrapText="true" />
                                 <VBox spacing="10.0">
                                     <children>
@@ -101,10 +101,6 @@
                                         </HBox>
                                         <HBox spacing="12.0" alignment="CENTER_LEFT">
                                             <children>
-                                                <Button text="Abrir sistema Swing"
-                                                        onAction="#onOpenSwing" mnemonicParsing="false"
-                                                        style="-fx-background-color: #F4B321; -fx-text-fill: #17364D; -fx-font-weight: bold; -fx-background-radius: 6;"
-                                                        prefHeight="40.0" />
                                                 <Button text="Acerca de SisTG" onAction="#onAbout"
                                                         mnemonicParsing="false" prefHeight="40.0" />
                                             </children>
@@ -128,7 +124,7 @@
                 <Insets top="12.0" right="36.0" bottom="12.0" left="36.0" />
             </padding>
             <children>
-                <Label text="SisTG UPTC · JavaFX y Swing (transición)" textFill="#526B80" />
+                <Label text="SisTG UPTC · JavaFX" textFill="#526B80" />
                 <Button text="Cerrar JavaFX" onAction="#onCloseJavaFx" mnemonicParsing="false" />
             </children>
         </HBox>
