@@ -1,4 +1,4 @@
-package co.edu.uptc.service;
+package co.edu.uptc.controller.service;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -7,9 +7,9 @@ import java.util.List;
 import co.edu.uptc.exception.BusinessException;
 import co.edu.uptc.model.Document;
 import co.edu.uptc.model.Teacher;
-import co.edu.uptc.repository.DataFiles;
-import co.edu.uptc.repository.JsonRepository;
-import co.edu.uptc.repository.Repository;
+import co.edu.uptc.model.repository.DataFiles;
+import co.edu.uptc.model.repository.JsonRepository;
+import co.edu.uptc.model.repository.Repository;
 import com.google.gson.reflect.TypeToken;
 
 public class TeacherService {

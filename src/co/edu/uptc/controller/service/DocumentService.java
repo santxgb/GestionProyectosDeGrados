@@ -1,4 +1,4 @@
-package co.edu.uptc.service;
+package co.edu.uptc.controller.service;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -20,9 +20,9 @@ import co.edu.uptc.model.enums.DeadlineStatus;
 import co.edu.uptc.model.enums.Modality;
 import co.edu.uptc.model.enums.Stage;
 import co.edu.uptc.model.enums.Status;
-import co.edu.uptc.repository.DataFiles;
-import co.edu.uptc.repository.JsonRepository;
-import co.edu.uptc.repository.Repository;
+import co.edu.uptc.model.repository.DataFiles;
+import co.edu.uptc.model.repository.JsonRepository;
+import co.edu.uptc.model.repository.Repository;
 import com.google.gson.reflect.TypeToken;
 
 public class DocumentService {

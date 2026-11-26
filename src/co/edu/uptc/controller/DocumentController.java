@@ -5,7 +5,7 @@ import co.edu.uptc.model.Attachment;
 import co.edu.uptc.model.Document;
 import co.edu.uptc.model.Jury;
 import co.edu.uptc.model.enums.Status;
-import co.edu.uptc.service.DocumentService;
+import co.edu.uptc.controller.service.DocumentService;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;

@@ -1,7 +1,7 @@
 package co.edu.uptc.controller;
 
 import co.edu.uptc.model.Teacher;
-import co.edu.uptc.service.TeacherService;
+import co.edu.uptc.controller.service.TeacherService;
 import java.util.List;
 
 public class TeacherController {

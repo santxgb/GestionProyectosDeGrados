@@ -1,4 +1,4 @@
-package co.edu.uptc.repository;
+package co.edu.uptc.model.repository;
 
 public final class DataFiles {
 

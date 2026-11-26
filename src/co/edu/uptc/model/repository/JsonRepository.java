@@ -1,4 +1,4 @@
-package co.edu.uptc.repository;
+package co.edu.uptc.model.repository;
 
 import java.io.File;
 import java.io.FileReader;
