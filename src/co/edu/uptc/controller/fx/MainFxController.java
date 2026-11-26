@@ -12,6 +12,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.Screen;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.layout.Region;
 import java.io.IOException;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
@@ -51,8 +54,7 @@ public class MainFxController {
             Stage stage = new Stage();
             stage.setTitle("SisTG UPTC - Gestión de estudiantes");
             stage.setScene(new Scene(root));
-            stage.setMinWidth(850);
-            stage.setMinHeight(630);
+            ajustarAlMonitor(stage);
             stage.setOnHidden(event -> studentWindow = null);
             studentWindow = stage;
             stage.show();
@@ -84,8 +86,7 @@ public class MainFxController {
             Stage stage = new Stage();
             stage.setTitle("SisTG UPTC - Gestión de docentes");
             stage.setScene(new Scene(root));
-            stage.setMinWidth(850);
-            stage.setMinHeight(630);
+            ajustarAlMonitor(stage);
             stage.setOnHidden(event -> teacherWindow = null);
             teacherWindow = stage;
             stage.show();
@@ -117,8 +118,7 @@ public class MainFxController {
             Stage stage = new Stage();
             stage.setTitle("SisTG UPTC - Radicación y consulta de propuestas");
             stage.setScene(new Scene(root));
-            stage.setMinWidth(1050);
-            stage.setMinHeight(700);
+            ajustarAlMonitor(stage);
             stage.setOnHidden(event -> documentWindow = null);
             documentWindow = stage;
             stage.show();
@@ -150,8 +150,7 @@ public class MainFxController {
             Stage stage = new Stage();
             stage.setTitle("SisTG UPTC - Tablero de trabajos de grado");
             stage.setScene(new Scene(root));
-            stage.setMinWidth(1140);
-            stage.setMinHeight(680);
+            ajustarAlMonitor(stage);
             stage.setOnHidden(event -> deadlineBoardWindow = null);
             deadlineBoardWindow = stage;
             stage.show();
@@ -184,8 +183,7 @@ public class MainFxController {
             Stage stage = new Stage();
             stage.setTitle("SisTG UPTC - Consulta de alertas");
             stage.setScene(new Scene(root));
-            stage.setMinWidth(890);
-            stage.setMinHeight(610);
+            ajustarAlMonitor(stage);
             stage.setOnHidden(event -> alertsWindow = null);
             alertsWindow = stage;
             stage.show();
@@ -217,8 +215,7 @@ public class MainFxController {
             Stage stage = new Stage();
             stage.setTitle("SisTG UPTC - Asignación de jurados");
             stage.setScene(new Scene(root));
-            stage.setMinWidth(1020);
-            stage.setMinHeight(710);
+            ajustarAlMonitor(stage);
             stage.setOnHidden(event -> juryWindow = null);
             juryWindow = stage;
             stage.show();
@@ -250,8 +247,7 @@ public class MainFxController {
             Stage stage = new Stage();
             stage.setTitle("SisTG UPTC - Observaciones de seguimiento");
             stage.setScene(new Scene(root));
-            stage.setMinWidth(1020);
-            stage.setMinHeight(690);
+            ajustarAlMonitor(stage);
             stage.setOnHidden(event -> observationsWindow = null);
             // La X de la ventana debe respetar los cambios sin guardar.
             stage.setOnCloseRequest(fxController::onWindowCloseRequest);
@@ -285,8 +281,7 @@ public class MainFxController {
             Stage stage = new Stage();
             stage.setTitle("SisTG UPTC - Gestión de anexos");
             stage.setScene(new Scene(root));
-            stage.setMinWidth(1040);
-            stage.setMinHeight(700);
+            ajustarAlMonitor(stage);
             stage.setOnHidden(event -> attachmentsWindow = null);
             // Evita perder un anexo sin guardar al cerrar con la X.
             stage.setOnCloseRequest(fxController::onWindowCloseRequest);
@@ -342,5 +337,26 @@ public class MainFxController {
     @FXML
     private void onCloseJavaFx() {
         Platform.exit();
+    }
+
+    private void ajustarAlMonitor(Stage stage) {
+        Stage mainStage = (Stage) statusLabel.getScene().getWindow();
+        List<Screen> monitors = Screen.getScreensForRectangle(
+                mainStage.getX(), mainStage.getY(), mainStage.getWidth(), mainStage.getHeight());
+        Screen monitor = monitors.isEmpty() ? Screen.getPrimary() : monitors.get(0);
+        Rectangle2D visible = monitor.getVisualBounds();
+
+        Region layout = (Region) stage.getScene().getRoot();
+        double preferredWidth = layout.prefWidth(-1) + 18;
+        double preferredHeight = layout.prefHeight(-1) + 40;
+        double width = Math.min(preferredWidth, visible.getWidth() - 32);
+        double height = Math.min(preferredHeight, visible.getHeight() - 32);
+
+        stage.setMinWidth(Math.min(600, width));
+        stage.setMinHeight(Math.min(400, height));
+        stage.setWidth(width);
+        stage.setHeight(height);
+        stage.setX(visible.getMinX() + (visible.getWidth() - width) / 2);
+        stage.setY(visible.getMinY() + (visible.getHeight() - height) / 2);
     }
 }

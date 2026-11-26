@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
+<?xml version='1.0' encoding='UTF-8'?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
@@ -13,39 +12,33 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
-<BorderPane prefHeight="850.0" prefWidth="1150.0"
-            xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="co.edu.uptc.controller.fx.JuryFxController">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" prefHeight="850.0" prefWidth="1150.0" fx:controller="co.edu.uptc.controller.fx.JuryFxController" style="-fx-font-family: System; -fx-font-size: 13px; -fx-background-color: #F5F5F5; -fx-focus-color: #D0A00F; -fx-faint-focus-color: rgba(208,160,15,0.15);">
     <top>
-        <VBox spacing="7.0" style="-fx-background-color: #143550;">
+        <VBox spacing="7.0" style="-fx-background-color: #FFCC29; -fx-border-color: transparent transparent #E4B11D transparent; -fx-border-width: 0 0 3 0;">
             <padding><Insets top="21.0" right="28.0" bottom="21.0" left="28.0"/></padding>
             <children>
-                <Label text="Asignación y consulta de jurados" textFill="WHITE">
+                <Label text="Asignación y consulta de jurados" style="-fx-text-fill: #212121; -fx-font-weight: bold;">
                     <font><Font name="System Bold" size="26.0"/></font>
                 </Label>
-                <Label text="Selecciona un trabajo de grado aprobado, consulta sus jurados y registra su acta de asignación."
-                       textFill="#DCE8F1" wrapText="true"/>
+                <Label text="Selecciona un trabajo de grado aprobado, consulta sus jurados y registra su acta de asignación." wrapText="true" style="-fx-text-fill: #363636;"/>
             </children>
         </VBox>
     </top>
     <center>
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: #F5F7FA;">
+        <ScrollPane fitToWidth="true" hbarPolicy="AS_NEEDED" style="-fx-background-color: #F5F5F5; -fx-background: #F5F5F5;">
             <content>
-                <VBox spacing="17.0" style="-fx-background-color: #F5F7FA;">
+                <VBox spacing="17.0" style="-fx-background-color: #F5F5F5;">
                     <padding><Insets top="20.0" right="24.0" bottom="22.0" left="24.0"/></padding>
                     <children>
                         <HBox alignment="CENTER_LEFT" spacing="12.0">
                             <children>
-                                <Label text="Trabajos de grado aprobados" textFill="#143550" HBox.hgrow="ALWAYS">
+                                <Label text="Trabajos de grado aprobados" HBox.hgrow="ALWAYS" style="-fx-text-fill: #303033; -fx-font-weight: bold;">
                                     <font><Font name="System Bold" size="18.0"/></font>
                                 </Label>
-                                <Button text="Actualizar lista" onAction="#onRefresh" mnemonicParsing="false"
-                                        style="-fx-background-color: #F4B321; -fx-font-weight: bold; -fx-text-fill: #143550;"/>
+                                <Button text="Actualizar lista" onAction="#onRefresh" mnemonicParsing="false" style="-fx-background-color: #FFCC29; -fx-background-radius: 6; -fx-border-color: #E3B321; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #212121; -fx-cursor: hand; -fx-padding: 7 13 7 13; -fx-font-weight: bold;"/>
                             </children>
                         </HBox>
-                        <TableView fx:id="workTable" prefHeight="202.0" minHeight="170.0">
+                        <TableView fx:id="workTable" prefHeight="202.0" minHeight="170.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #D6D6D6; -fx-border-width: 1; -fx-control-inner-background: #FFFFFF; -fx-control-inner-background-alt: #F7F7F7; -fx-selection-bar: #FFEDAE; -fx-selection-bar-non-focused: #FFEDAE; -fx-accent: #FFCC29; -fx-focus-color: #D0A00F;">
                             <columns>
                                 <TableColumn fx:id="idColumn" text="ID" prefWidth="130.0"/>
                                 <TableColumn fx:id="titleColumn" text="Título" prefWidth="555.0"/>
@@ -53,76 +46,71 @@
                                 <TableColumn fx:id="juriesColumn" text="Jurados" prefWidth="100.0"/>
                             </columns>
                             <placeholder>
-                                <Label text="No hay trabajos aprobados para asignar jurados." textFill="#526B80"/>
+                                <Label text="No hay trabajos aprobados para asignar jurados." style="-fx-text-fill: #5C5C5C;"/>
                             </placeholder>
                         </TableView>
-                        <VBox spacing="7.0" style="-fx-background-color: WHITE; -fx-background-radius: 8; -fx-border-color: #DCE3EA; -fx-border-radius: 8;">
+                        <VBox spacing="7.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 9; -fx-border-color: #DEDEDE; -fx-border-width: 1; -fx-border-radius: 9;">
                             <padding><Insets top="12.0" right="16.0" bottom="12.0" left="16.0"/></padding>
                             <children>
-                                <Label fx:id="selectedWorkLabel" text="Ningún trabajo de grado seleccionado." textFill="#143550" wrapText="true">
+                                <Label fx:id="selectedWorkLabel" text="Ningún trabajo de grado seleccionado." wrapText="true" style="-fx-text-fill: #303033; -fx-font-weight: bold;">
                                     <font><Font name="System Bold" size="15.0"/></font>
                                 </Label>
-                                <Label fx:id="currentJuriesLabel" text="Selecciona un expediente para consultar sus jurados." textFill="#46596B" wrapText="true"/>
+                                <Label fx:id="currentJuriesLabel" text="Selecciona un expediente para consultar sus jurados." wrapText="true" style="-fx-text-fill: #5C5C5C;"/>
                             </children>
                         </VBox>
-                        <VBox spacing="11.0" style="-fx-background-color: WHITE; -fx-background-radius: 8; -fx-border-color: #DCE3EA; -fx-border-radius: 8;">
+                        <VBox spacing="11.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 9; -fx-border-color: #DEDEDE; -fx-border-width: 1; -fx-border-radius: 9;">
                             <padding><Insets top="16.0" right="18.0" bottom="16.0" left="18.0"/></padding>
                             <children>
-                                <Label text="Datos de la asignación" textFill="#143550">
+                                <Label text="Datos de la asignación" style="-fx-text-fill: #303033; -fx-font-weight: bold;">
                                     <font><Font name="System Bold" size="18.0"/></font>
                                 </Label>
-                                <Label text="El acta es obligatoria. Al guardar se reemplaza la lista completa de jurados del expediente seleccionado."
-                                       textFill="#526B80" wrapText="true"/>
+                                <Label text="El acta es obligatoria. Al guardar se reemplaza la lista completa de jurados del expediente seleccionado." wrapText="true" style="-fx-text-fill: #5C5C5C;"/>
                                 <HBox spacing="12.0" alignment="CENTER_LEFT">
                                     <children>
-                                        <Label text="Acta de asignación:" minWidth="145.0"/>
-                                        <TextField fx:id="assignmentActField" prefWidth="420.0"
-                                                   promptText="Número o referencia del acta"/>
+                                        <Label text="Acta de asignación:" minWidth="145.0" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="assignmentActField" prefWidth="420.0" promptText="Número o referencia del acta" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
                                     </children>
                                 </HBox>
-                                <Label text="Jurado 1" textFill="#143550">
+                                <Label text="Jurado 1" style="-fx-text-fill: #303033; -fx-font-weight: bold;">
                                     <font><Font name="System Bold" size="16.0"/></font>
                                 </Label>
                                 <GridPane hgap="12.0" vgap="10.0">
                                     <children>
-                                        <Label text="Identificación" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                        <TextField fx:id="jury1IdField" prefWidth="255.0" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                                        <Label text="Apellidos" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                                        <TextField fx:id="jury1LastNamesField" prefWidth="255.0" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-                                        <Label text="Nombres" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                                        <TextField fx:id="jury1FirstNamesField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                                        <Label text="Correo" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                                        <TextField fx:id="jury1EmailField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
-                                        <Label text="Teléfono" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                                        <TextField fx:id="jury1PhoneField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                        <Label text="Identificación" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="jury1IdField" prefWidth="255.0" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
+                                        <Label text="Apellidos" GridPane.columnIndex="2" GridPane.rowIndex="0" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="jury1LastNamesField" prefWidth="255.0" GridPane.columnIndex="3" GridPane.rowIndex="0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
+                                        <Label text="Nombres" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="jury1FirstNamesField" GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
+                                        <Label text="Correo" GridPane.columnIndex="2" GridPane.rowIndex="1" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="jury1EmailField" GridPane.columnIndex="3" GridPane.rowIndex="1" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
+                                        <Label text="Teléfono" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="jury1PhoneField" GridPane.columnIndex="1" GridPane.rowIndex="2" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
                                         <CheckBox fx:id="jury1ExternalCheck" text="Es externo" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                                        <TextField fx:id="jury1InstitutionField" promptText="Institución (si es externo)"
-                                                   GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                                        <TextField fx:id="jury1InstitutionField" promptText="Institución (si es externo)" GridPane.columnIndex="3" GridPane.rowIndex="2" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
                                     </children>
                                 </GridPane>
                                 <CheckBox fx:id="secondJuryCheck" text="Asignar también un segundo jurado"/>
                                 <GridPane fx:id="jury2Pane" hgap="12.0" vgap="10.0">
                                     <children>
-                                        <Label text="Identificación" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                                        <TextField fx:id="jury2IdField" prefWidth="255.0" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
-                                        <Label text="Apellidos" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
-                                        <TextField fx:id="jury2LastNamesField" prefWidth="255.0" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
-                                        <Label text="Nombres" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                                        <TextField fx:id="jury2FirstNamesField" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                                        <Label text="Correo" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-                                        <TextField fx:id="jury2EmailField" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
-                                        <Label text="Teléfono" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                                        <TextField fx:id="jury2PhoneField" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                                        <Label text="Identificación" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="jury2IdField" prefWidth="255.0" GridPane.columnIndex="1" GridPane.rowIndex="0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
+                                        <Label text="Apellidos" GridPane.columnIndex="2" GridPane.rowIndex="0" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="jury2LastNamesField" prefWidth="255.0" GridPane.columnIndex="3" GridPane.rowIndex="0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
+                                        <Label text="Nombres" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="jury2FirstNamesField" GridPane.columnIndex="1" GridPane.rowIndex="1" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
+                                        <Label text="Correo" GridPane.columnIndex="2" GridPane.rowIndex="1" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="jury2EmailField" GridPane.columnIndex="3" GridPane.rowIndex="1" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
+                                        <Label text="Teléfono" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="jury2PhoneField" GridPane.columnIndex="1" GridPane.rowIndex="2" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
                                         <CheckBox fx:id="jury2ExternalCheck" text="Es externo" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-                                        <TextField fx:id="jury2InstitutionField" promptText="Institución (si es externo)"
-                                                   GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+                                        <TextField fx:id="jury2InstitutionField" promptText="Institución (si es externo)" GridPane.columnIndex="3" GridPane.rowIndex="2" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
                                     </children>
                                 </GridPane>
                                 <HBox spacing="12.0" alignment="CENTER_RIGHT">
                                     <children>
-                                        <Button text="Restablecer datos guardados" onAction="#onRestore" mnemonicParsing="false"/>
-                                        <Button text="Guardar asignación" onAction="#onSave" mnemonicParsing="false"
-                                                style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold;"/>
+                                        <Button text="Restablecer datos guardados" onAction="#onRestore" mnemonicParsing="false" style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-color: #C7C7C7; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #303033; -fx-cursor: hand; -fx-padding: 7 13 7 13;"/>
+                                        <Button text="Guardar asignación" onAction="#onSave" mnemonicParsing="false" style="-fx-background-color: #FFCC29; -fx-background-radius: 6; -fx-border-color: #E3B321; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #212121; -fx-cursor: hand; -fx-padding: 7 13 7 13; -fx-font-weight: bold;"/>
                                     </children>
                                 </HBox>
                             </children>
@@ -133,12 +121,11 @@
         </ScrollPane>
     </center>
     <bottom>
-        <HBox spacing="12.0" alignment="CENTER_LEFT" style="-fx-background-color: #E8EDF1;">
+        <HBox spacing="12.0" alignment="CENTER_LEFT" style="-fx-background-color: #47484B;">
             <padding><Insets top="12.0" right="24.0" bottom="12.0" left="24.0"/></padding>
             <children>
-                <Label fx:id="statusLabel" text="Cargando trabajos aprobados..." wrapText="true"
-                       HBox.hgrow="ALWAYS" textFill="#34495E"/>
-                <Button fx:id="closeButton" text="Cerrar ventana" onAction="#onClose" mnemonicParsing="false"/>
+                <Label fx:id="statusLabel" text="Cargando trabajos aprobados..." wrapText="true" HBox.hgrow="ALWAYS" style="-fx-text-fill: #FFFFFF;"/>
+                <Button fx:id="closeButton" text="Cerrar ventana" onAction="#onClose" mnemonicParsing="false" style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-color: #C7C7C7; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #303033; -fx-cursor: hand; -fx-padding: 7 13 7 13;"/>
             </children>
         </HBox>
     </bottom>

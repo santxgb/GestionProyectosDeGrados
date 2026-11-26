@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
+<?xml version='1.0' encoding='UTF-8'?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -8,124 +7,96 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
-<BorderPane prefHeight="690.0" prefWidth="940.0"
-            xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="co.edu.uptc.controller.fx.MainFxController">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" prefHeight="690.0" prefWidth="940.0" fx:controller="co.edu.uptc.controller.fx.MainFxController" style="-fx-font-family: System; -fx-font-size: 13px; -fx-background-color: #F5F5F5; -fx-focus-color: #D0A00F; -fx-faint-focus-color: rgba(208,160,15,0.15);">
     <top>
-        <VBox spacing="8.0" style="-fx-background-color: #143550;">
+        <VBox spacing="8.0" style="-fx-background-color: #FFCC29; -fx-border-color: transparent transparent #E4B11D transparent; -fx-border-width: 0 0 3 0;">
             <padding>
-                <Insets top="28.0" right="36.0" bottom="28.0" left="36.0" />
+                <Insets top="28.0" right="36.0" bottom="28.0" left="36.0"/>
             </padding>
             <children>
-                <Label text="SisTG UPTC" textFill="WHITE">
-                    <font><Font name="System Bold" size="30.0" /></font>
+                <Label text="SisTG UPTC" style="-fx-text-fill: #212121; -fx-font-weight: bold;">
+                    <font><Font name="System Bold" size="30.0"/></font>
                 </Label>
-                <Label text="Sistema de seguimiento de propuestas y trabajos de grado"
-                       textFill="#DDE9F2" wrapText="true">
-                    <font><Font size="15.0" /></font>
+                <Label text="Sistema de seguimiento de propuestas y trabajos de grado" wrapText="true" style="-fx-text-fill: #363636;">
+                    <font><Font size="15.0"/></font>
                 </Label>
-                <Label text="Escuela de Ingeniería de Sistemas y Computación · Seccional Sogamoso"
-                       textFill="#BBD1E1" wrapText="true" />
+                <Label text="Escuela de Ingeniería de Sistemas y Computación Seccional Sogamoso" wrapText="true" style="-fx-text-fill: #47484B;"/>
             </children>
         </VBox>
     </top>
     <center>
-        <ScrollPane fitToWidth="true" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED"
-                    style="-fx-background-color: #F5F7FA;">
+        <ScrollPane fitToWidth="true" hbarPolicy="AS_NEEDED" vbarPolicy="AS_NEEDED" style="-fx-background-color: #F5F5F5; -fx-background: #F5F5F5;">
             <content>
-                <VBox spacing="22.0" style="-fx-background-color: #F5F7FA;">
+                <VBox spacing="22.0" style="-fx-background-color: #F5F5F5;">
                     <padding>
-                        <Insets top="34.0" right="36.0" bottom="28.0" left="36.0" />
+                        <Insets top="34.0" right="36.0" bottom="28.0" left="36.0"/>
                     </padding>
                     <children>
-                        <Label text="Bienvenido a SisTG" textFill="#143550">
-                            <font><Font name="System Bold" size="25.0" /></font>
+                        <Label text="Bienvenido a SisTG" style="-fx-text-fill: #303033; -fx-font-weight: bold;">
+                            <font><Font name="System Bold" size="25.0"/></font>
                         </Label>
-                        <Label text="Consulta estudiantes, docentes, propuestas y trabajos de grado desde los módulos JavaFX de SisTG."
-                               textFill="#46596B" wrapText="true">
-                            <font><Font size="15.0" /></font>
+                        <Label text="Consulta estudiantes, docentes, propuestas y trabajos de grado desde los módulos JavaFX de SisTG." wrapText="true" style="-fx-text-fill: #5C5C5C;">
+                            <font><Font size="15.0"/></font>
                         </Label>
-                        <VBox spacing="14.0" style="-fx-background-color: WHITE; -fx-background-radius: 10; -fx-border-color: #DCE3EA; -fx-border-radius: 10;">
+                        <VBox spacing="14.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 9; -fx-border-color: #DEDEDE; -fx-border-width: 1; -fx-border-radius: 9;">
                             <padding>
-                                <Insets top="25.0" right="25.0" bottom="25.0" left="25.0" />
+                                <Insets top="25.0" right="25.0" bottom="25.0" left="25.0"/>
                             </padding>
                             <children>
-                                <Label text="Módulos disponibles" textFill="#143550">
-                                    <font><Font name="System Bold" size="18.0" /></font>
+                                <Label text="Módulos disponibles" style="-fx-text-fill: #303033; -fx-font-weight: bold;">
+                                    <font><Font name="System Bold" size="18.0"/></font>
                                 </Label>
-                                <Label text="Gestiona estudiantes, docentes, propuestas, tablero, alertas, jurados, observaciones y anexos desde JavaFX."
-                                       textFill="#46596B" wrapText="true" />
+                                <Label text="Gestiona estudiantes, docentes, propuestas, tablero, alertas, jurados, observaciones y anexos desde JavaFX." wrapText="true" style="-fx-text-fill: #5C5C5C;"/>
                                 <VBox spacing="10.0">
                                     <children>
                                         <HBox spacing="12.0" alignment="CENTER_LEFT">
                                             <children>
-                                                <Button text="Gestionar estudiantes (JavaFX)" onAction="#onOpenStudents"
-                                                        mnemonicParsing="false" prefHeight="40.0"
-                                                        style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
-                                                <Button text="Gestionar docentes (JavaFX)" onAction="#onOpenTeachers"
-                                                        mnemonicParsing="false" prefHeight="40.0"
-                                                        style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
+                                                <Button text="Gestionar estudiantes (JavaFX)" onAction="#onOpenStudents" mnemonicParsing="false" prefHeight="40.0" style="-fx-background-color: #47484B; -fx-background-radius: 6; -fx-border-color: #47484B; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #FFFFFF; -fx-cursor: hand; -fx-padding: 7 13 7 13; -fx-font-weight: bold;"/>
+                                                <Button text="Gestionar docentes (JavaFX)" onAction="#onOpenTeachers" mnemonicParsing="false" prefHeight="40.0" style="-fx-background-color: #47484B; -fx-background-radius: 6; -fx-border-color: #47484B; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #FFFFFF; -fx-cursor: hand; -fx-padding: 7 13 7 13; -fx-font-weight: bold;"/>
                                             </children>
                                         </HBox>
                                         <HBox spacing="12.0" alignment="CENTER_LEFT">
                                             <children>
-                                                <Button text="Radicar / consultar propuestas (JavaFX)" onAction="#onOpenDocuments"
-                                                        mnemonicParsing="false" prefHeight="40.0"
-                                                        style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
-                                                <Button text="Tablero de vencimientos (JavaFX)" onAction="#onOpenDeadlineBoard"
-                                                        mnemonicParsing="false" prefHeight="40.0"
-                                                        style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
+                                                <Button text="Radicar / consultar propuestas (JavaFX)" onAction="#onOpenDocuments" mnemonicParsing="false" prefHeight="40.0" style="-fx-background-color: #47484B; -fx-background-radius: 6; -fx-border-color: #47484B; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #FFFFFF; -fx-cursor: hand; -fx-padding: 7 13 7 13; -fx-font-weight: bold;"/>
+                                                <Button text="Tablero de vencimientos (JavaFX)" onAction="#onOpenDeadlineBoard" mnemonicParsing="false" prefHeight="40.0" style="-fx-background-color: #47484B; -fx-background-radius: 6; -fx-border-color: #47484B; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #FFFFFF; -fx-cursor: hand; -fx-padding: 7 13 7 13; -fx-font-weight: bold;"/>
                                             </children>
                                         </HBox>
                                         <HBox spacing="12.0" alignment="CENTER_LEFT">
                                             <children>
-                                                <Button text="Consultar alertas (JavaFX)" onAction="#onOpenAlerts"
-                                                        mnemonicParsing="false" prefHeight="40.0"
-                                                        style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
-                                                <Button text="Asignar / consultar jurados (JavaFX)" onAction="#onOpenJuries"
-                                                        mnemonicParsing="false" prefHeight="40.0"
-                                                        style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
+                                                <Button text="Consultar alertas (JavaFX)" onAction="#onOpenAlerts" mnemonicParsing="false" prefHeight="40.0" style="-fx-background-color: #47484B; -fx-background-radius: 6; -fx-border-color: #47484B; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #FFFFFF; -fx-cursor: hand; -fx-padding: 7 13 7 13; -fx-font-weight: bold;"/>
+                                                <Button text="Asignar / consultar jurados (JavaFX)" onAction="#onOpenJuries" mnemonicParsing="false" prefHeight="40.0" style="-fx-background-color: #47484B; -fx-background-radius: 6; -fx-border-color: #47484B; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #FFFFFF; -fx-cursor: hand; -fx-padding: 7 13 7 13; -fx-font-weight: bold;"/>
                                             </children>
                                         </HBox>
                                         <HBox spacing="12.0" alignment="CENTER_LEFT">
                                             <children>
-                                                <Button text="Observaciones de seguimiento (JavaFX)" onAction="#onOpenObservations"
-                                                        mnemonicParsing="false" prefHeight="40.0"
-                                                        style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
-                                                <Button text="Gestionar anexos (JavaFX)" onAction="#onOpenAttachments"
-                                                        mnemonicParsing="false" prefHeight="40.0"
-                                                        style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold; -fx-background-radius: 6;" />
+                                                <Button text="Observaciones de seguimiento (JavaFX)" onAction="#onOpenObservations" mnemonicParsing="false" prefHeight="40.0" style="-fx-background-color: #47484B; -fx-background-radius: 6; -fx-border-color: #47484B; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #FFFFFF; -fx-cursor: hand; -fx-padding: 7 13 7 13; -fx-font-weight: bold;"/>
+                                                <Button text="Gestionar anexos (JavaFX)" onAction="#onOpenAttachments" mnemonicParsing="false" prefHeight="40.0" style="-fx-background-color: #47484B; -fx-background-radius: 6; -fx-border-color: #47484B; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #FFFFFF; -fx-cursor: hand; -fx-padding: 7 13 7 13; -fx-font-weight: bold;"/>
                                             </children>
                                         </HBox>
                                         <HBox spacing="12.0" alignment="CENTER_LEFT">
                                             <children>
-                                                <Button text="Acerca de SisTG" onAction="#onAbout"
-                                                        mnemonicParsing="false" prefHeight="40.0" />
+                                                <Button text="Acerca de SisTG" onAction="#onAbout" mnemonicParsing="false" prefHeight="40.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-color: #C7C7C7; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #303033; -fx-cursor: hand; -fx-padding: 7 13 7 13;"/>
                                             </children>
                                         </HBox>
                                     </children>
                                 </VBox>
-                                <Label fx:id="statusLabel" text="JavaFX listo. Tus registros JSON no se modifican al abrir esta pantalla."
-                                       textFill="#4A6070" wrapText="true" />
+                                <Label fx:id="statusLabel" text="JavaFX listo. Tus registros JSON no se modifican al abrir esta pantalla." wrapText="true" style="-fx-text-fill: #FFFFFF;"/>
                             </children>
                         </VBox>
-                        <Label text="Módulos JavaFX: estudiantes, docentes, propuestas, tablero, alertas, jurados, observaciones y anexos."
-                               textFill="#516273" wrapText="true" />
+                        <Label text="Módulos JavaFX: estudiantes, docentes, propuestas, tablero, alertas, jurados, observaciones y anexos." wrapText="true" style="-fx-text-fill: #5C5C5C;"/>
                     </children>
                 </VBox>
             </content>
         </ScrollPane>
     </center>
     <bottom>
-        <HBox alignment="CENTER_RIGHT" spacing="12.0" style="-fx-background-color: #E8EDF1;">
+        <HBox alignment="CENTER_RIGHT" spacing="12.0" style="-fx-background-color: #47484B;">
             <padding>
-                <Insets top="12.0" right="36.0" bottom="12.0" left="36.0" />
+                <Insets top="12.0" right="36.0" bottom="12.0" left="36.0"/>
             </padding>
             <children>
-                <Label text="SisTG UPTC · JavaFX" textFill="#526B80" />
-                <Button text="Cerrar JavaFX" onAction="#onCloseJavaFx" mnemonicParsing="false" />
+                <Label text="SisTG UPTC · JavaFX" style="-fx-text-fill: #5C5C5C;"/>
+                <Button text="Cerrar JavaFX" onAction="#onCloseJavaFx" mnemonicParsing="false" style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-color: #C7C7C7; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #303033; -fx-cursor: hand; -fx-padding: 7 13 7 13;"/>
             </children>
         </HBox>
     </bottom>

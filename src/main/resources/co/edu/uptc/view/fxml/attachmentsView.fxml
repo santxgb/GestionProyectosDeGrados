@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
+<?xml version='1.0' encoding='UTF-8'?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
@@ -14,106 +13,91 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
-<BorderPane prefHeight="790.0" prefWidth="1100.0"
-            xmlns="http://javafx.com/javafx/21"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="co.edu.uptc.controller.fx.AttachmentsFxController">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" prefHeight="790.0" prefWidth="1100.0" fx:controller="co.edu.uptc.controller.fx.AttachmentsFxController" style="-fx-font-family: System; -fx-font-size: 13px; -fx-background-color: #F5F5F5; -fx-focus-color: #D0A00F; -fx-faint-focus-color: rgba(208,160,15,0.15);">
     <top>
-        <VBox spacing="7.0" style="-fx-background-color: #143550;">
+        <VBox spacing="7.0" style="-fx-background-color: #FFCC29; -fx-border-color: transparent transparent #E4B11D transparent; -fx-border-width: 0 0 3 0;">
             <padding>
-                <Insets top="22.0" right="30.0" bottom="22.0" left="30.0" />
+                <Insets top="22.0" right="30.0" bottom="22.0" left="30.0"/>
             </padding>
             <children>
-                <Label text="Anexos de trabajos de grado" textFill="WHITE">
-                    <font><Font name="System Bold" size="25.0" /></font>
+                <Label text="Anexos de trabajos de grado" style="-fx-text-fill: #212121; -fx-font-weight: bold;">
+                    <font><Font name="System Bold" size="25.0"/></font>
                 </Label>
-                <Label text="Consulta los anexos de cada trabajo aprobado y registra la ruta de un archivo existente."
-                       textFill="#DDE9F2" wrapText="true" />
+                <Label text="Consulta los anexos de cada trabajo aprobado y registra la ruta de un archivo existente." wrapText="true" style="-fx-text-fill: #363636;"/>
             </children>
         </VBox>
     </top>
     <center>
-        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" style="-fx-background-color: #F5F7FA;">
+        <ScrollPane fitToWidth="true" hbarPolicy="AS_NEEDED" style="-fx-background-color: #F5F5F5; -fx-background: #F5F5F5;">
             <content>
-                <VBox spacing="16.0" style="-fx-background-color: #F5F7FA;">
+                <VBox spacing="16.0" style="-fx-background-color: #F5F5F5;">
                     <padding>
-                        <Insets top="23.0" right="30.0" bottom="23.0" left="30.0" />
+                        <Insets top="23.0" right="30.0" bottom="23.0" left="30.0"/>
                     </padding>
                     <children>
-                        <Label text="Trabajos de grado aprobados" textFill="#143550">
-                            <font><Font name="System Bold" size="18.0" /></font>
+                        <Label text="Trabajos de grado aprobados" style="-fx-text-fill: #303033; -fx-font-weight: bold;">
+                            <font><Font name="System Bold" size="18.0"/></font>
                         </Label>
-                        <Label fx:id="summaryLabel" text="Cargando trabajos aprobados..." textFill="#526B80" />
-                        <TableView fx:id="workTable" prefHeight="190.0" minHeight="150.0">
+                        <Label fx:id="summaryLabel" text="Cargando trabajos aprobados..." style="-fx-text-fill: #5C5C5C;"/>
+                        <TableView fx:id="workTable" prefHeight="190.0" minHeight="150.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #D6D6D6; -fx-border-width: 1; -fx-control-inner-background: #FFFFFF; -fx-control-inner-background-alt: #F7F7F7; -fx-selection-bar: #FFEDAE; -fx-selection-bar-non-focused: #FFEDAE; -fx-accent: #FFCC29; -fx-focus-color: #D0A00F;">
                             <columns>
-                                <TableColumn fx:id="workIdColumn" text="Expediente" prefWidth="145.0" />
-                                <TableColumn fx:id="workTitleColumn" text="Título" prefWidth="520.0" />
-                                <TableColumn fx:id="workStatusColumn" text="Estado" prefWidth="210.0" />
-                                <TableColumn fx:id="workAttachmentsColumn" text="Anexos" prefWidth="100.0" />
+                                <TableColumn fx:id="workIdColumn" text="Expediente" prefWidth="145.0"/>
+                                <TableColumn fx:id="workTitleColumn" text="Título" prefWidth="520.0"/>
+                                <TableColumn fx:id="workStatusColumn" text="Estado" prefWidth="210.0"/>
+                                <TableColumn fx:id="workAttachmentsColumn" text="Anexos" prefWidth="100.0"/>
                             </columns>
                         </TableView>
-                        <VBox spacing="11.0" style="-fx-background-color: WHITE; -fx-border-color: #DCE3EA; -fx-border-radius: 8; -fx-background-radius: 8;">
+                        <VBox spacing="11.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 9; -fx-border-color: #DEDEDE; -fx-border-width: 1; -fx-border-radius: 9;">
                             <padding>
-                                <Insets top="17.0" right="18.0" bottom="18.0" left="18.0" />
+                                <Insets top="17.0" right="18.0" bottom="18.0" left="18.0"/>
                             </padding>
                             <children>
-                                <Label fx:id="selectedWorkLabel" text="Selecciona un trabajo de grado aprobado."
-                                       textFill="#143550" wrapText="true">
-                                    <font><Font name="System Bold" size="15.0" /></font>
+                                <Label fx:id="selectedWorkLabel" text="Selecciona un trabajo de grado aprobado." wrapText="true" style="-fx-text-fill: #303033; -fx-font-weight: bold;">
+                                    <font><Font name="System Bold" size="15.0"/></font>
                                 </Label>
-                                <Label text="Anexos registrados (solo lectura)" textFill="#143550">
-                                    <font><Font name="System Bold" size="14.0" /></font>
+                                <Label text="Anexos registrados (solo lectura)" style="-fx-text-fill: #303033; -fx-font-weight: bold;">
+                                    <font><Font name="System Bold" size="14.0"/></font>
                                 </Label>
-                                <TableView fx:id="attachmentsTable" prefHeight="160.0" minHeight="130.0">
+                                <TableView fx:id="attachmentsTable" prefHeight="160.0" minHeight="130.0" style="-fx-background-color: #FFFFFF; -fx-border-color: #D6D6D6; -fx-border-width: 1; -fx-control-inner-background: #FFFFFF; -fx-control-inner-background-alt: #F7F7F7; -fx-selection-bar: #FFEDAE; -fx-selection-bar-non-focused: #FFEDAE; -fx-accent: #FFCC29; -fx-focus-color: #D0A00F;">
                                     <columns>
-                                        <TableColumn fx:id="attachmentNameColumn" text="Nombre" prefWidth="255.0" />
-                                        <TableColumn fx:id="attachmentTypeColumn" text="Tipo" prefWidth="175.0" />
-                                        <TableColumn fx:id="attachmentDateColumn" text="Fecha de carga" prefWidth="130.0" />
-                                        <TableColumn fx:id="attachmentPathColumn" text="Ruta registrada" prefWidth="415.0" />
+                                        <TableColumn fx:id="attachmentNameColumn" text="Nombre" prefWidth="255.0"/>
+                                        <TableColumn fx:id="attachmentTypeColumn" text="Tipo" prefWidth="175.0"/>
+                                        <TableColumn fx:id="attachmentDateColumn" text="Fecha de carga" prefWidth="130.0"/>
+                                        <TableColumn fx:id="attachmentPathColumn" text="Ruta registrada" prefWidth="415.0"/>
                                     </columns>
                                 </TableView>
-                                <Label text="Ruta completa del anexo seleccionado" textFill="#526B80" />
-                                <TextField fx:id="selectedAttachmentPathField" editable="false"
-                                           promptText="Selecciona un anexo en la tabla para ver su ruta completa." />
+                                <Label text="Ruta completa del anexo seleccionado" style="-fx-text-fill: #5C5C5C;"/>
+                                <TextField fx:id="selectedAttachmentPathField" editable="false" promptText="Selecciona un anexo en la tabla para ver su ruta completa." style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
                             </children>
                         </VBox>
-                        <VBox spacing="11.0" style="-fx-background-color: WHITE; -fx-border-color: #DCE3EA; -fx-border-radius: 8; -fx-background-radius: 8;">
+                        <VBox spacing="11.0" style="-fx-background-color: #FFFFFF; -fx-background-radius: 9; -fx-border-color: #DEDEDE; -fx-border-width: 1; -fx-border-radius: 9;">
                             <padding>
-                                <Insets top="18.0" right="18.0" bottom="18.0" left="18.0" />
+                                <Insets top="18.0" right="18.0" bottom="18.0" left="18.0"/>
                             </padding>
                             <children>
-                                <Label text="Registrar un anexo" textFill="#143550">
-                                    <font><Font name="System Bold" size="17.0" /></font>
+                                <Label text="Registrar un anexo" style="-fx-text-fill: #303033; -fx-font-weight: bold;">
+                                    <font><Font name="System Bold" size="17.0"/></font>
                                 </Label>
                                 <GridPane hgap="12.0" vgap="12.0">
                                     <columnConstraints>
-                                        <ColumnConstraints minWidth="125.0" prefWidth="160.0" />
-                                        <ColumnConstraints hgrow="ALWAYS" />
-                                        <ColumnConstraints minWidth="130.0" prefWidth="165.0" />
-                                        <ColumnConstraints hgrow="ALWAYS" />
+                                        <ColumnConstraints minWidth="125.0" prefWidth="160.0"/>
+                                        <ColumnConstraints hgrow="ALWAYS"/>
+                                        <ColumnConstraints minWidth="130.0" prefWidth="165.0"/>
+                                        <ColumnConstraints hgrow="ALWAYS"/>
                                     </columnConstraints>
                                     <children>
-                                        <Label text="Nombre del anexo:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
-                                        <TextField fx:id="nameField" promptText="Ej. Acta de aprobación" disable="true"
-                                                   GridPane.rowIndex="0" GridPane.columnIndex="1" />
-                                        <Label text="Tipo de documento:" GridPane.rowIndex="0" GridPane.columnIndex="2" />
-                                        <TextField fx:id="typeField" promptText="Ej. PDF" disable="true"
-                                                   GridPane.rowIndex="0" GridPane.columnIndex="3" />
-                                        <Label text="Archivo:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
-                                        <TextField fx:id="pathField" editable="false"
-                                                   promptText="Utiliza Buscar archivo..." GridPane.rowIndex="1" GridPane.columnIndex="1"
-                                                   GridPane.columnSpan="2" />
-                                        <Button fx:id="browseButton" text="Buscar archivo..." disable="true"
-                                                onAction="#onBrowseFile" mnemonicParsing="false"
-                                                GridPane.rowIndex="1" GridPane.columnIndex="3" />
-                                        <Label text="Fecha de carga:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
-                                        <DatePicker fx:id="uploadDatePicker" disable="true"
-                                                    GridPane.rowIndex="2" GridPane.columnIndex="1" />
+                                        <Label text="Nombre del anexo:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="nameField" promptText="Ej. Acta de aprobación" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="1" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
+                                        <Label text="Tipo de documento:" GridPane.rowIndex="0" GridPane.columnIndex="2" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="typeField" promptText="Ej. PDF" disable="true" GridPane.rowIndex="0" GridPane.columnIndex="3" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
+                                        <Label text="Archivo:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-text-fill: #252525;"/>
+                                        <TextField fx:id="pathField" editable="false" promptText="Utiliza Buscar archivo..." GridPane.rowIndex="1" GridPane.columnIndex="1" GridPane.columnSpan="2" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
+                                        <Button fx:id="browseButton" text="Buscar archivo..." disable="true" onAction="#onBrowseFile" mnemonicParsing="false" GridPane.rowIndex="1" GridPane.columnIndex="3" style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-color: #C7C7C7; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #303033; -fx-cursor: hand; -fx-padding: 7 13 7 13;"/>
+                                        <Label text="Fecha de carga:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-text-fill: #252525;"/>
+                                        <DatePicker fx:id="uploadDatePicker" disable="true" GridPane.rowIndex="2" GridPane.columnIndex="1" style="-fx-background-color: #FFFFFF; -fx-background-radius: 5; -fx-border-color: #C9C9C9; -fx-border-radius: 5; -fx-border-width: 1; -fx-text-fill: #252525;"/>
                                     </children>
                                 </GridPane>
-                                <Label text="Se guarda únicamente la ruta del archivo en el expediente JSON. No se copia, mueve ni adjunta el archivo físico."
-                                       textFill="#526B80" wrapText="true" />
+                                <Label text="Se guarda únicamente la ruta del archivo en el expediente JSON. No se copia, mueve ni adjunta el archivo físico." wrapText="true" style="-fx-text-fill: #5C5C5C;"/>
                             </children>
                         </VBox>
                     </children>
@@ -122,23 +106,20 @@
         </ScrollPane>
     </center>
     <bottom>
-        <VBox spacing="9.0" style="-fx-background-color: #E8EDF1;">
+        <VBox spacing="9.0" style="-fx-background-color: #47484B;">
             <padding>
-                <Insets top="13.0" right="30.0" bottom="13.0" left="30.0" />
+                <Insets top="13.0" right="30.0" bottom="13.0" left="30.0"/>
             </padding>
             <children>
                 <HBox spacing="11.0" alignment="CENTER_LEFT">
                     <children>
-                        <Button text="Actualizar listado" onAction="#onRefresh" mnemonicParsing="false" />
-                        <Button text="Limpiar formulario" onAction="#onClearDraft" mnemonicParsing="false" />
-                        <Button fx:id="saveButton" text="Registrar anexo" onAction="#onSaveAttachment"
-                                disable="true" mnemonicParsing="false"
-                                style="-fx-background-color: #143550; -fx-text-fill: WHITE; -fx-font-weight: bold;" />
-                        <Button fx:id="closeButton" text="Cerrar" onAction="#onClose" mnemonicParsing="false" />
+                        <Button text="Actualizar listado" onAction="#onRefresh" mnemonicParsing="false" style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-color: #C7C7C7; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #303033; -fx-cursor: hand; -fx-padding: 7 13 7 13;"/>
+                        <Button text="Limpiar formulario" onAction="#onClearDraft" mnemonicParsing="false" style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-color: #C7C7C7; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #303033; -fx-cursor: hand; -fx-padding: 7 13 7 13;"/>
+                        <Button fx:id="saveButton" text="Registrar anexo" onAction="#onSaveAttachment" disable="true" mnemonicParsing="false" style="-fx-background-color: #FFCC29; -fx-background-radius: 6; -fx-border-color: #E3B321; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #212121; -fx-cursor: hand; -fx-padding: 7 13 7 13; -fx-font-weight: bold;"/>
+                        <Button fx:id="closeButton" text="Cerrar" onAction="#onClose" mnemonicParsing="false" style="-fx-background-color: #FFFFFF; -fx-background-radius: 6; -fx-border-color: #C7C7C7; -fx-border-width: 1; -fx-border-radius: 6; -fx-text-fill: #303033; -fx-cursor: hand; -fx-padding: 7 13 7 13;"/>
                     </children>
                 </HBox>
-                <Label fx:id="statusLabel" text="Selecciona un trabajo aprobado para consultar sus anexos."
-                       textFill="#3D5263" wrapText="true" />
+                <Label fx:id="statusLabel" text="Selecciona un trabajo aprobado para consultar sus anexos." wrapText="true" style="-fx-text-fill: #FFFFFF;"/>
             </children>
         </VBox>
     </bottom>
