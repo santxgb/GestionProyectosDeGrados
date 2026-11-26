@@ -7,11 +7,12 @@ import co.edu.uptc.service.DocumentService;
 import co.edu.uptc.service.StudentService;
 import co.edu.uptc.service.TeacherService;
 import co.edu.uptc.view.MainView;
+import javafx.application.Application;
 
 public class Main {
 
     public static void main(String[] args) {
-        createMainView().setVisible(true);
+        Application.launch(SisTGApplication.class, args);
     }
 
     public static MainView createMainView() {
